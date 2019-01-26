@@ -55,4 +55,12 @@ export default class Hex {
     this.captured = true
     this.sprite.tint = color
   }
+
+  disable() {
+    this.sprite.alpha = 0.25
+  }
+
+  nullifyPiece() {
+    this.piece = null
+  }
 }

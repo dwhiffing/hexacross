@@ -19,8 +19,9 @@ export default class extends Phaser.Scene {
   create() {
     this.hexService = new HexService(this)
 
-    this.pairs = STARTING_COORDS.map(coordPair => coordPair.map((coord) => {
+    this.pairs = STARTING_COORDS.map(coordPair => coordPair.map((coord, index) => {
       const hex = this.hexService.hexGrid.get(coord)
+      hex.index = index
       hex.color = coord.color
       return hex
     }))
@@ -48,8 +49,13 @@ export default class extends Phaser.Scene {
   nextTurn() {
     this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
     this.captureIntersections()
-    this.movePieceToHex(this.pairs[2][0].piece, this.hexService.getRandomUnoccupiedTile())
-    this.movePieceToHex(this.pairs[2][1].piece, this.hexService.getRandomUnoccupiedTile())
+    const pieceA = this.pairs[2][0].piece
+    const pieceB = this.pairs[2][1].piece
+    if (pieceA.sprite.alpha === 0) {
+      this.movePieceToHex(pieceB, this.hexService.getRandomUnoccupiedTile())
+    } else {
+      this.movePieceToHex(pieceA, this.hexService.getRandomUnoccupiedTile())
+    }
   }
 
   onMoveMouse(pointer) {
@@ -72,7 +78,7 @@ export default class extends Phaser.Scene {
       }
       this.hexService.deselectHex(this.activeHex)
       this.activeHex = null
-    } else {
+    } else if (clickedHex.color !== 0xaaaaaa && clickedHex.piece.sprite.alpha !== 0) {
       const hex = this.hexService.selectHex(clickedHex)
       this.activeHex = hex
     }

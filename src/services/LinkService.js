@@ -13,6 +13,9 @@ export default class LinkService {
         piece.hex = hex
         hex.piece = piece
         piece.sprite.setFrame(11)
+        if (hex.index === 0) {
+          piece.disable()
+        }
         return piece
       })
       pair.color = pair[0].hex.color

@@ -51,15 +51,16 @@ export default class HexService {
 
   selectHex(hex) {
     if (hex.piece) {
+      const partnerHex = hex.piece.link.hex
       hex.hexObject.select()
-      this.possibleMoves = this.getPossibleMoves(hex)
+      this.possibleMoves = this.getPossibleMoves(partnerHex)
       this.possibleMoves.forEach(h => h.hexObject.hover())
       return hex
     }
   }
 
   getPossibleMoves(hex) {
-    const neighbours = [] || this.hexGrid.neighborsOf(hex)
+    const neighbours = []
 
     // get row
     for (let q = -10; q < 10; q++) {
