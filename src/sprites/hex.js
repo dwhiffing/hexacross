@@ -11,13 +11,6 @@ export default class Hex {
     this.sprite.tint = DIM_HEX
   }
 
-  movePiece(hex) {
-    if (this.piece) {
-      this.piece.move(hex)
-      this.piece = null
-    }
-  }
-
   select() {
     this.active = true
     this.sprite.tint = BRIGHT_HEX
