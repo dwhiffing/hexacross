@@ -1,4 +1,5 @@
 import { defineGrid, extendHex } from 'honeycomb-grid'
+import compact from 'lodash/compact'
 import Piece from '../sprites/piece'
 import Hex from '../sprites/hex'
 
@@ -16,14 +17,13 @@ export default class HexService {
       size: 40,
       render() {
         const position = this.toPoint()
-        const hex = new Hex(this.x, this.y, position, scene)
-        hex.sprite.x += X_OFFSET
-        hex.sprite.y += Y_OFFSET
+        const hex = new Hex(this.x, this.y, position, scene, X_OFFSET, Y_OFFSET)
         if (this.x === 2 && this.y === 2) {
           piece.init(hex)
           this.piece = piece
           hex.piece = this.piece
         }
+        hex.textObject.text = `${this.q}, ${this.r}, ${this.s}`
         this.hexObject = hex
       },
     })
@@ -61,20 +61,17 @@ export default class HexService {
 
   onClickMouse(pointer) {
     const clickedHex = this.getHexFromScreenPos(pointer)
-    const lastActivePiece = this.activeHex ? this.activeHex.piece : null
 
     if (!clickedHex) {
       return
     }
     if (this.activeHex) {
-      if (this.possibleMoves.includes(clickedHex)) {
+      if (this.activeHex !== clickedHex && this.possibleMoves.includes(clickedHex)) {
         this.activePiece.move(clickedHex)
         this.activeHex.piece = null
       }
       this.deselectActiveHex()
-    }
-
-    if (clickedHex.piece && lastActivePiece !== clickedHex.piece && !this.activeHex) {
+    } else if (clickedHex.piece && !this.activeHex) {
       this.selectHex(clickedHex)
     }
   }
@@ -90,7 +87,26 @@ export default class HexService {
   }
 
   getPossibleMoves(hex) {
-    return this.hexGrid.neighborsOf(hex)
+    const neighbours = [] || this.hexGrid.neighborsOf(hex)
+
+    // get row
+    for (let q = -10; q < 10; q++) {
+      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({ q, r: hex.r })))
+    }
+
+    // get diagonal right
+    for (let r = -10; r < 10; r++) {
+      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({ q: hex.q, r, s: hex.s })))
+    }
+
+    // get diagonal left
+    for (let r = -10; r < 10; r++) {
+      neighbours.push(
+        this.hexGrid.get(hex.cubeToCartesian({ q: hex.q + r, r: hex.r - r, s: hex.s })),
+      )
+    }
+
+    return compact(neighbours)
   }
 
   deselectActiveHex() {
