@@ -52,6 +52,7 @@ export default class extends Phaser.Scene {
 
   nextTurn() {
     this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
+    this.linkService.drawLinks()
     this.captureIntersections()
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
   }
@@ -86,10 +87,9 @@ export default class extends Phaser.Scene {
   }
 
   movePieceToHex(piece, toHex) {
-    piece.move(toHex)
-    this.linkService.drawLinks()
+    piece.move(toHex, this.nextTurn.bind(this))
+    // this.linkService.drawLinks()
     this.turnTimer.destroy()
-    this.nextTurn()
   }
 
   captureIntersections() {

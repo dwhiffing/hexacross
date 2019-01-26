@@ -1,14 +1,15 @@
 const LIT_HEX = 0x888888
-const DIM_HEX = 0x555555
-const BRIGHT_HEX = 0xdddddd
+const DIM_HEX = 0xffffff
+const BRIGHT_HEX = 0xffffff
 
 export default class Hex {
   constructor(y, x, position, scene, xOffset, yOffset) {
     this.scene = scene
     this.sprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'hexagon')
+    this.sprite.displayWidth = 70
+    this.sprite.displayHeight = 80
     this.gridX = x
     this.gridY = y
-    this.sprite.tint = DIM_HEX
     this.textObject = this.scene.add.text(
       this.sprite.x - 20,
       this.sprite.y - 10,
@@ -28,7 +29,7 @@ export default class Hex {
       return
     }
     this.active = true
-    this.sprite.tint = BRIGHT_HEX
+    this.sprite.setFrame(1)
   }
 
   deselect() {
@@ -36,7 +37,7 @@ export default class Hex {
       return
     }
     this.active = false
-    this.sprite.tint = DIM_HEX
+    this.sprite.setFrame(0)
   }
 
   hover() {
@@ -44,7 +45,7 @@ export default class Hex {
       return
     }
     if (!this.active) {
-      this.sprite.tint = LIT_HEX
+      this.sprite.setFrame(1)
     }
   }
 

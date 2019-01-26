@@ -2,12 +2,13 @@ export default class Piece {
   constructor(scene, hex, color) {
     this.color = color
     this.scene = scene
-    this.sprite = this.scene.add.image(hex.sprite.x, hex.sprite.y - 4, 'tiles', 5)
-    this.sprite.scaleX = 0.4
-    this.sprite.scaleY = 0.4
+    this.sprite = this.scene.add.image(hex.sprite.x, hex.sprite.y - 4, 'handle')
+    this.sprite.displayWidth = 55
+    this.sprite.displayHeight = 55
   }
 
-  move(toHex) {
+  move(toHex, callback) {
+    this.hex = toHex
     this.scene.tweens.add({
       targets: this.sprite,
       x: toHex.hexObject.sprite.x,
@@ -15,18 +16,18 @@ export default class Piece {
       ease: 'Power1',
       duration: 500,
       onUpdate: (tween, image) => {
-        this.hex.graphics.clear()
+        this.pair.graphics.clear()
         const { x, y } = this.link.sprite
         const line = new Phaser.Geom.Line(x, y, image.x, image.y)
-        this.hex.graphics.strokeLineShape(line)
+        this.pair.graphics.strokeLineShape(line)
       },
       onComplete: () => {
+        callback()
         this.sprite.y = toHex.hexObject.sprite.y - 4
         this.sprite.x = toHex.hexObject.sprite.x
 
         this.hex.hexObject.nullifyPiece()
         toHex.piece = this
-        this.hex = toHex
         toHex.color = this.hex.color
       },
     })

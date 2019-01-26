@@ -28,9 +28,9 @@ export default class LinkService {
     if (pair.graphics) {
       pair.graphics.clear()
     }
-    pair.graphics = this.scene.add.graphics({ lineStyle: { width: 12, color: pair.color } })
-    pair[0].hex.graphics = pair.graphics
-    pair[1].hex.graphics = pair.graphics
+    pair.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: pair.color } })
+    pair[0].pair = pair
+    pair[1].pair = pair
     const line = new Phaser.Geom.Line(
       pair[0].hex.hexObject.sprite.x,
       pair[0].hex.hexObject.sprite.y,

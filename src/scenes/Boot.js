@@ -19,7 +19,12 @@ export default class extends Phaser.Scene {
       frameWidth: 166,
       frameHeight: 166,
     })
-    this.textures.addBase64('hexagon', hexURI)
+    this.load.image('handle', 'assets/images/handle1.png')
+    this.load.spritesheet('hexagon', 'assets/images/hex.png', {
+      frameWidth: 390,
+      frameHeight: 450,
+    })
+    // this.textures.addBase64('hexagon', hexURI)
 
     this.load.on('complete', () => {
       progress.destroy()
