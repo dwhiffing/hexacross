@@ -1,27 +1,11 @@
 import flatten from 'lodash/flatten'
-import compact from 'lodash/compact'
 
-const BACKROW = [4, 2, 3, 1, 0, 3, 2, 4]
 export default class Piece {
   constructor(scene, position, hex) {
-    const oddPosition = (position + 1) % 2 === 1
     this.index = 5
 
     this.gridX = hex.gridX
     this.gridY = hex.gridY
-
-    if (position <= 15) {
-      if (oddPosition) {
-        this.index = BACKROW[position / 2]
-      }
-    } else if (!oddPosition) {
-      this.index = BACKROW[(position - 17) / 2]
-    }
-
-    if (position < 16) {
-      this.black = true
-      this.index += 6
-    }
 
     this.sprite = scene.add.image(hex.sprite.x, hex.sprite.y - 4, 'tiles', this.index)
     this.sprite.scaleX = 0.4
@@ -38,65 +22,13 @@ export default class Piece {
   }
 
   getPossibleMoves(getHex) {
-    const piece = this.index >= 6 ? this.index - 6 : this.index
-    if (piece === 5) {
-      // pawn
-      return this.getLines(
-        getHex,
-        this.black
-          ? [{ name: 'back-right', size: 1 }, { name: 'back-left', size: 1 }]
-          : [{ name: 'front-right', size: 1 }, { name: 'front-left', size: 1 }],
-      )
-    }
-    if (piece === 4) {
-      // rook
-      return this.getLines(getHex, [
-        { name: 'front-right', size: 1 },
-        { name: 'back-right', size: 1 },
-        { name: 'front-left', size: 1 },
-        { name: 'back-left', size: 1 },
-        { name: 'horizontal', size: 20 },
-      ])
-    }
-    if (piece === 3) {
-      // knight
-      return this.getLines(getHex, [
-        { name: 'front-right', size: 2, canJump: true },
-        { name: 'back-right', size: 2, canJump: true },
-        { name: 'front-left', size: 2, canJump: true },
-        { name: 'back-left', size: 2, canJump: true },
-        { name: 'horizontal', size: 2, canJump: true },
-      ])
-    }
-    if (piece === 2) {
-      // bishop
-      return this.getLines(getHex, [
-        { name: 'front-right', size: 20 },
-        { name: 'back-right', size: 20 },
-        { name: 'front-left', size: 20 },
-        { name: 'back-left', size: 20 },
-      ])
-    }
-    if (piece === 1) {
-      // queen
-      return this.getLines(getHex, [
-        { name: 'front-right', size: 20 },
-        { name: 'back-right', size: 20 },
-        { name: 'front-left', size: 20 },
-        { name: 'back-left', size: 20 },
-        { name: 'horizontal', size: 20 },
-      ])
-    }
-    if (piece === 0) {
-      // king
-      return this.getLines(getHex, [
-        { name: 'front-right', size: 1 },
-        { name: 'back-right', size: 1 },
-        { name: 'front-left', size: 1 },
-        { name: 'back-left', size: 1 },
-        { name: 'horizontal', size: 3 },
-      ])
-    }
+    return this.getLines(getHex, [
+      { name: 'front-right', size: 20 },
+      { name: 'back-right', size: 20 },
+      { name: 'front-left', size: 20 },
+      { name: 'back-left', size: 20 },
+      { name: 'horizontal', size: 20 },
+    ])
   }
 
   getLines(getHex, directions) {

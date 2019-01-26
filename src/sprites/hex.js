@@ -3,11 +3,9 @@ const DIM_HEX = 0x555555
 const BRIGHT_HEX = 0xdddddd
 
 export default class Hex {
-  constructor(y, x, width, height, scene) {
-    const screenX = (width * x) / 2 + width / 2
-    const screenY = height * y * 1.5 + (height / 4) * 3 * (x % 2) + height / 2
+  constructor(y, x, position, scene) {
     this.scene = scene
-    this.sprite = this.scene.add.sprite(screenX, screenY, 'hexagon')
+    this.sprite = this.scene.add.sprite(position.x, position.y, 'hexagon')
     this.gridX = x
     this.gridY = y
     this.sprite.tint = DIM_HEX
