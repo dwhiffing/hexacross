@@ -32,17 +32,29 @@ export default class HexService {
       onCreate: hex => hex.render(),
     })
 
-    const coords = [{ x: 3, y: 3 }, { x: 4, y: 4 }]
-    const pieces = coords.map((coord) => {
+    this.pair1 = [{ x: 3, y: 3 }, { x: 4, y: 4 }].map((coord) => {
       const hex = this.hexGrid.get(coord)
       const piece = new Piece(scene, hex.hexObject)
       piece.hex = hex
       hex.piece = piece
       return piece
     })
-    pieces[0].link = pieces[1]
-    pieces[1].link = pieces[0]
-    this.drawLink(pieces[0].hex, pieces[1].hex)
+    this.pair1[0].link = this.pair1[1]
+    this.pair1[1].link = this.pair1[0]
+
+    this.pair2 = [{ x: 5, y: 5 }, { x: 6, y: 4 }].map((coord) => {
+      const hex = this.hexGrid.get(coord)
+      const piece = new Piece(scene, hex.hexObject)
+      piece.hex = hex
+      hex.piece = piece
+      piece.sprite.setFrame(11)
+      return piece
+    })
+    this.pair2[0].link = this.pair2[1]
+    this.pair2[1].link = this.pair2[0]
+
+    this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
+    this.drawLinks(this.pair1, this.pair2)
 
     scene.input.on('pointermove', this.onMoveMouse.bind(this))
     scene.input.on('pointerdown', this.onClickMouse.bind(this))
@@ -75,7 +87,7 @@ export default class HexService {
     if (this.activeHex) {
       if (this.activeHex !== clickedHex && this.possibleMoves.includes(clickedHex)) {
         this.activePiece.move(clickedHex)
-        this.drawLink(clickedHex, this.activeHex.piece.link.hex)
+        this.drawLinks(this.pair1, this.pair2)
         this.activeHex.piece = null
       }
       this.deselectActiveHex()
@@ -94,16 +106,21 @@ export default class HexService {
     }
   }
 
-  drawLink(hexA, hexB) {
+  drawLink([pieceA, pieceB]) {
+    this.graphics.strokeLineShape(
+      new Phaser.Geom.Line(
+        pieceA.hex.hexObject.sprite.x,
+        pieceA.hex.hexObject.sprite.y,
+        pieceB.hex.hexObject.sprite.x,
+        pieceB.hex.hexObject.sprite.y,
+      ),
+    )
+  }
+
+  drawLinks(...pairs) {
     this.graphics.clear()
     this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
-    const line = new Phaser.Geom.Line(
-      hexA.hexObject.sprite.x,
-      hexA.hexObject.sprite.y,
-      hexB.hexObject.sprite.x,
-      hexB.hexObject.sprite.y,
-    )
-    this.graphics.strokeLineShape(line)
+    pairs.forEach(this.drawLink.bind(this))
   }
 
   getPossibleMoves(hex) {
