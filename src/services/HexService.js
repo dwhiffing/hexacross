@@ -106,21 +106,31 @@ export default class HexService {
     }
   }
 
-  drawLink([pieceA, pieceB]) {
-    this.graphics.strokeLineShape(
-      new Phaser.Geom.Line(
-        pieceA.hex.hexObject.sprite.x,
-        pieceA.hex.hexObject.sprite.y,
-        pieceB.hex.hexObject.sprite.x,
-        pieceB.hex.hexObject.sprite.y,
-      ),
+  drawLink(pair) {
+    const line = new Phaser.Geom.Line(
+      pair[0].hex.hexObject.sprite.x,
+      pair[0].hex.hexObject.sprite.y,
+      pair[1].hex.hexObject.sprite.x,
+      pair[1].hex.hexObject.sprite.y,
     )
+    pair[0].line = line
+    pair[1].line = line
+    this.graphics.strokeLineShape(line)
   }
 
   drawLinks(...pairs) {
     this.graphics.clear()
     this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
     pairs.forEach(this.drawLink.bind(this))
+    const point = new Phaser.Geom.Point()
+    console.log(Phaser.Geom.Intersects.LineToLine(pairs[0][0].line, pairs[1][0].line, point))
+    console.log(point)
+    if (point.x !== 0 && point.y !== 0) {
+      const hex = this.getHexFromScreenPos(point)
+      const circle = new Phaser.Geom.Circle(point.x, point.y, 10)
+      hex.hexObject.capture(0xff0000)
+      this.graphics.fillCircleShape(circle)
+    }
   }
 
   getPossibleMoves(hex) {

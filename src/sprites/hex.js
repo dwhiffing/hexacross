@@ -18,24 +18,42 @@ export default class Hex {
         fontSize: 18,
         color: '#ffffff',
         align: 'left',
-        alpha: 0.5,
       },
     )
+    this.textObject.alpha = 0
   }
 
   select() {
+    if (this.captured) {
+      return
+    }
     this.active = true
     this.sprite.tint = BRIGHT_HEX
   }
 
   deselect() {
+    if (this.captured) {
+      return
+    }
     this.active = false
     this.sprite.tint = DIM_HEX
   }
 
   hover() {
+    if (this.captured) {
+      return
+    }
     if (!this.active) {
       this.sprite.tint = LIT_HEX
     }
+  }
+
+  capture(color) {
+    console.log('tst')
+    if (this.captured) {
+      return
+    }
+    this.captured = true
+    this.sprite.tint = color
   }
 }
