@@ -97,8 +97,13 @@ export default class HexService {
     if (!clickedHex) {
       return
     }
+
     if (this.activeHex) {
-      if (this.activeHex !== clickedHex && this.possibleMoves.includes(clickedHex)) {
+      if (
+        this.activeHex !== clickedHex
+        && !clickedHex.piece
+        && this.possibleMoves.includes(clickedHex)
+      ) {
         this.activePiece.move(clickedHex)
         this.drawLinks(this.pairs)
         this.activeHex.piece = null
@@ -123,7 +128,7 @@ export default class HexService {
     if (pair.graphics) {
       pair.graphics.clear()
     }
-    pair.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: pair.color } })
+    pair.graphics = this.scene.add.graphics({ lineStyle: { width: 12, color: pair.color } })
     const line = new Phaser.Geom.Line(
       pair[0].hex.hexObject.sprite.x,
       pair[0].hex.hexObject.sprite.y,
