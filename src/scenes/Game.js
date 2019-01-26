@@ -4,7 +4,7 @@ import LinkService from '../services/LinkService'
 const STARTING_COORDS = [
   [{ x: 0, y: 4, color: 0xff0000 }, { x: 1, y: 4, color: 0xff0000 }],
   [{ x: 8, y: 4, color: 0x0000ff }, { x: 7, y: 4, color: 0x0000ff }],
-  [{ x: 3, y: 6, color: 0xaaaaaa }, { x: 5, y: 2, color: 0xaaaaaa }],
+  // [{ x: 3, y: 6, color: 0xaaaaaa }, { x: 5, y: 2, color: 0xaaaaaa }],
 ]
 
 const TURN_DURATION = 5000
