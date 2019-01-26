@@ -20,7 +20,7 @@ export default class Hex {
         align: 'left',
       },
     )
-    this.textObject.alpha = 0
+    this.textObject.alpha = 0.25
   }
 
   select() {
@@ -49,7 +49,6 @@ export default class Hex {
   }
 
   capture(color) {
-    console.log('tst')
     if (this.captured) {
       return
     }

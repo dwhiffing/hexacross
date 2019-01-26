@@ -18,13 +18,12 @@ export default class HexService {
       render() {
         const position = this.toPoint()
         const hex = new Hex(this.x, this.y, position, scene, X_OFFSET, Y_OFFSET)
-        hex.textObject.text = `${this.q}, ${this.r}, ${this.s}`
+        // hex.textObject.text = `${this.q}, ${this.r}, ${this.s}`
         this.hexObject = hex
       },
     })
     this.hexGridPrototype = this.ExtendedHex()
     this.ExtendedHexGrid = defineGrid(this.ExtendedHex)
-    this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
 
     this.hexGrid = this.ExtendedHexGrid.hexagon({
       radius: 4,
@@ -32,17 +31,18 @@ export default class HexService {
       onCreate: hex => hex.render(),
     })
 
-    this.pair1 = [{ x: 3, y: 3 }, { x: 4, y: 4 }].map((coord) => {
+    const pair1 = [{ x: 0, y: 4 }, { x: 1, y: 4 }].map((coord) => {
       const hex = this.hexGrid.get(coord)
       const piece = new Piece(scene, hex.hexObject)
       piece.hex = hex
       hex.piece = piece
       return piece
     })
-    this.pair1[0].link = this.pair1[1]
-    this.pair1[1].link = this.pair1[0]
+    pair1[0].link = pair1[1]
+    pair1[1].link = pair1[0]
+    pair1.color = 0xff0000
 
-    this.pair2 = [{ x: 5, y: 5 }, { x: 6, y: 4 }].map((coord) => {
+    const pair2 = [{ x: 8, y: 4 }, { x: 7, y: 4 }].map((coord) => {
       const hex = this.hexGrid.get(coord)
       const piece = new Piece(scene, hex.hexObject)
       piece.hex = hex
@@ -50,11 +50,24 @@ export default class HexService {
       piece.sprite.setFrame(11)
       return piece
     })
-    this.pair2[0].link = this.pair2[1]
-    this.pair2[1].link = this.pair2[0]
+    pair2[0].link = pair2[1]
+    pair2[1].link = pair2[0]
+    pair2.color = 0x0000ff
 
-    this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
-    this.drawLinks(this.pair1, this.pair2)
+    const pair3 = [{ x: 3, y: 6 }, { x: 5, y: 2 }].map((coord) => {
+      const hex = this.hexGrid.get(coord)
+      const piece = new Piece(scene, hex.hexObject)
+      piece.hex = hex
+      hex.piece = piece
+      piece.sprite.setFrame(4)
+      return piece
+    })
+    pair3[0].link = pair3[1]
+    pair3[1].link = pair3[0]
+    pair3.color = 0xaaaaaa
+
+    this.pairs = [pair1, pair2, pair3]
+    this.drawLinks(this.pairs)
 
     scene.input.on('pointermove', this.onMoveMouse.bind(this))
     scene.input.on('pointerdown', this.onClickMouse.bind(this))
@@ -87,7 +100,7 @@ export default class HexService {
     if (this.activeHex) {
       if (this.activeHex !== clickedHex && this.possibleMoves.includes(clickedHex)) {
         this.activePiece.move(clickedHex)
-        this.drawLinks(this.pair1, this.pair2)
+        this.drawLinks(this.pairs)
         this.activeHex.piece = null
       }
       this.deselectActiveHex()
@@ -107,6 +120,10 @@ export default class HexService {
   }
 
   drawLink(pair) {
+    if (pair.graphics) {
+      pair.graphics.clear()
+    }
+    pair.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: pair.color } })
     const line = new Phaser.Geom.Line(
       pair[0].hex.hexObject.sprite.x,
       pair[0].hex.hexObject.sprite.y,
@@ -115,22 +132,25 @@ export default class HexService {
     )
     pair[0].line = line
     pair[1].line = line
-    this.graphics.strokeLineShape(line)
+    pair.graphics.strokeLineShape(line)
   }
 
-  drawLinks(...pairs) {
-    this.graphics.clear()
-    this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
+  drawLinks(pairs) {
     pairs.forEach(this.drawLink.bind(this))
+    this.captureHex(pairs[0], pairs[2])
+    this.captureHex(pairs[1], pairs[2])
+  }
+
+  captureHex(pairA, pairB) {
+    const lineA = pairA[0].line
+    const lineB = pairB[0].line
     const point = new Phaser.Geom.Point()
-    console.log(Phaser.Geom.Intersects.LineToLine(pairs[0][0].line, pairs[1][0].line, point))
-    console.log(point)
-    if (point.x !== 0 && point.y !== 0) {
-      const hex = this.getHexFromScreenPos(point)
-      const circle = new Phaser.Geom.Circle(point.x, point.y, 10)
-      hex.hexObject.capture(0xff0000)
-      this.graphics.fillCircleShape(circle)
+    Phaser.Geom.Intersects.LineToLine(lineA, lineB, point)
+    if (point.x === 0 && point.y === 0) {
+      return
     }
+    const hex = this.getHexFromScreenPos(point)
+    hex.hexObject.capture(pairA.color)
   }
 
   getPossibleMoves(hex) {
