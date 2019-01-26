@@ -96,7 +96,7 @@ export default class extends Phaser.Scene {
     const intersections = this.linkService.getPairIntersections()
     intersections.forEach((intersection) => {
       const hex = this.hexService.getHexFromScreenPos(intersection.point)
-      hex.hexObject.capture(intersection.color)
+      hex.hexObject.capture(this.activeTurnColor)
     })
   }
 }
