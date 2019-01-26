@@ -20,7 +20,7 @@ export default class Hex {
         align: 'left',
       },
     )
-    this.textObject.alpha = 0.25
+    this.textObject.alpha = 0
   }
 
   select() {

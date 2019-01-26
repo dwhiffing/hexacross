@@ -1,5 +1,6 @@
 import { defineGrid, extendHex } from 'honeycomb-grid'
 import compact from 'lodash/compact'
+import sample from 'lodash/sample'
 import Hex from '../sprites/hex'
 
 const X_OFFSET = 100
@@ -91,5 +92,9 @@ export default class HexService {
     const hex = this.hexGrid.get(hexCoords)
 
     return hex
+  }
+
+  getRandomUnoccupiedTile() {
+    return sample(this.hexGrid.filter(hex => !hex.piece))
   }
 }
