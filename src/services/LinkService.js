@@ -13,9 +13,6 @@ export default class LinkService {
         piece.hex = hex
         hex.piece = piece
         piece.sprite.setFrame(11)
-        if (hex.index === 0) {
-          piece.disable()
-        }
         return piece
       })
       pair.color = pair[0].hex.color
@@ -32,6 +29,8 @@ export default class LinkService {
       pair.graphics.clear()
     }
     pair.graphics = this.scene.add.graphics({ lineStyle: { width: 12, color: pair.color } })
+    pair[0].hex.graphics = pair.graphics
+    pair[1].hex.graphics = pair.graphics
     const line = new Phaser.Geom.Line(
       pair[0].hex.hexObject.sprite.x,
       pair[0].hex.hexObject.sprite.y,
