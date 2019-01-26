@@ -12,23 +12,19 @@ export default class HexService {
     this.scene = scene
 
     this.possibleMoves = []
-    const piece = new Piece(scene)
+
     this.ExtendedHex = extendHex({
       size: 40,
       render() {
         const position = this.toPoint()
         const hex = new Hex(this.x, this.y, position, scene, X_OFFSET, Y_OFFSET)
-        if (this.x === 2 && this.y === 2) {
-          piece.init(hex)
-          this.piece = piece
-          hex.piece = this.piece
-        }
         hex.textObject.text = `${this.q}, ${this.r}, ${this.s}`
         this.hexObject = hex
       },
     })
     this.hexGridPrototype = this.ExtendedHex()
     this.ExtendedHexGrid = defineGrid(this.ExtendedHex)
+    this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
 
     this.hexGrid = this.ExtendedHexGrid.hexagon({
       radius: 4,
@@ -36,7 +32,18 @@ export default class HexService {
       onCreate: hex => hex.render(),
     })
 
-    this.scene.children.bringToTop(piece.sprite)
+    const coords = [{ x: 3, y: 3 }, { x: 4, y: 4 }]
+    const pieces = coords.map((coord) => {
+      const hex = this.hexGrid.get(coord)
+      const piece = new Piece(scene, hex.hexObject)
+      piece.hex = hex
+      hex.piece = piece
+      return piece
+    })
+    pieces[0].link = pieces[1]
+    pieces[1].link = pieces[0]
+    this.drawLink(pieces[0].hex, pieces[1].hex)
+
     scene.input.on('pointermove', this.onMoveMouse.bind(this))
     scene.input.on('pointerdown', this.onClickMouse.bind(this))
   }
@@ -68,6 +75,7 @@ export default class HexService {
     if (this.activeHex) {
       if (this.activeHex !== clickedHex && this.possibleMoves.includes(clickedHex)) {
         this.activePiece.move(clickedHex)
+        this.drawLink(clickedHex, this.activeHex.piece.link.hex)
         this.activeHex.piece = null
       }
       this.deselectActiveHex()
@@ -84,6 +92,18 @@ export default class HexService {
       this.possibleMoves = this.getPossibleMoves(this.activeHex)
       this.possibleMoves.forEach(hex => hex.hexObject.hover())
     }
+  }
+
+  drawLink(hexA, hexB) {
+    this.graphics.clear()
+    this.graphics = this.scene.add.graphics({ lineStyle: { width: 4, color: 0x00ff00 } })
+    const line = new Phaser.Geom.Line(
+      hexA.hexObject.sprite.x,
+      hexA.hexObject.sprite.y,
+      hexB.hexObject.sprite.x,
+      hexB.hexObject.sprite.y,
+    )
+    this.graphics.strokeLineShape(line)
   }
 
   getPossibleMoves(hex) {
