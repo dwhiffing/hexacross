@@ -1,4 +1,7 @@
-import { defineGrid, extendHex } from 'honeycomb-grid'
+import {
+  defineGrid,
+  extendHex
+} from 'honeycomb-grid'
 import compact from 'lodash/compact'
 import sample from 'lodash/sample'
 import Hex from '../sprites/hex'
@@ -36,9 +39,9 @@ export default class HexService {
     const hoveredHex = this.getHexFromScreenPos(pointer)
 
     if (
-      this.lastHoveredHex
-      && !this.lastHoveredHex.active
-      && !this.possibleMoves.includes(this.lastHoveredHex)
+      this.lastHoveredHex &&
+      !this.lastHoveredHex.active &&
+      !this.possibleMoves.includes(this.lastHoveredHex)
     ) {
       this.lastHoveredHex.deselect()
     }
@@ -64,18 +67,29 @@ export default class HexService {
 
     // get row
     for (let q = -10; q < 10; q++) {
-      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({ q, r: hex.r })))
+      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({
+        q,
+        r: hex.r
+      })))
     }
 
     // get diagonal right
     for (let r = -10; r < 10; r++) {
-      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({ q: hex.q, r, s: hex.s })))
+      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({
+        q: hex.q,
+        r,
+        s: hex.s
+      })))
     }
 
     // get diagonal left
     for (let r = -10; r < 10; r++) {
       neighbours.push(
-        this.hexGrid.get(hex.cubeToCartesian({ q: hex.q + r, r: hex.r - r, s: hex.s })),
+        this.hexGrid.get(hex.cubeToCartesian({
+          q: hex.q + r,
+          r: hex.r - r,
+          s: hex.s
+        })),
       )
     }
 
@@ -88,7 +102,10 @@ export default class HexService {
     this.possibleMoves = []
   }
 
-  getHexFromScreenPos({ x: mouseX, y: mouseY }) {
+  getHexFromScreenPos({
+    x: mouseX,
+    y: mouseY
+  }) {
     const hexCoords = this.ExtendedHexGrid.pointToHex(mouseX - 70, mouseY - 20)
     const hex = this.hexGrid.get(hexCoords)
 

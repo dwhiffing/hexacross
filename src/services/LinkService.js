@@ -9,7 +9,7 @@ export default class LinkService {
 
     pairs.forEach((pair) => {
       pair = pair.map((hex) => {
-        const piece = new Piece(scene, hex.hexObject)
+        const piece = new Piece(scene, hex.hexObject, hex.color)
         piece.hex = hex
         hex.piece = piece
         piece.sprite.setFrame(11)
@@ -48,10 +48,7 @@ export default class LinkService {
   }
 
   getPairIntersections() {
-    return compact([
-      this.getPairIntersection(this.links[0], this.links[2]),
-      this.getPairIntersection(this.links[1], this.links[2]),
-    ])
+    return compact([this.getPairIntersection(this.links[0], this.links[1])])
   }
 
   getPairIntersection(pairA, pairB) {
