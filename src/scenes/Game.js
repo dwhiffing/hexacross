@@ -172,8 +172,10 @@ export default class extends Phaser.Scene {
     if (this.turn === 10) {
       if (this.blueScore > this.redScore) {
         this.scene.start('BlueVictory')
-      } else {
+      } else if (this.blueScore < this.redScore) {
         this.scene.start('RedVictory')
+      } else {
+        this.restart()
       }
       this.activeTurnColor = null
     }
