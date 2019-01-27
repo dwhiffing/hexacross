@@ -1,7 +1,3 @@
-const LIT_HEX = 0x888888
-const DIM_HEX = 0xffffff
-const BRIGHT_HEX = 0xffffff
-
 export default class Hex {
   constructor(y, x, position, scene, xOffset, yOffset) {
     this.scene = scene
@@ -10,6 +6,8 @@ export default class Hex {
     this.sprite.displayHeight = 80
     this.gridX = x
     this.gridY = y
+    this.coinSprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'coin')
+    this.coinSprite.alpha = 0
     this.textObject = this.scene.add.text(
       this.sprite.x - 20,
       this.sprite.y - 10,
@@ -21,6 +19,7 @@ export default class Hex {
         align: 'left',
       },
     )
+    this.score = 0
     this.textObject.alpha = 0
   }
 
@@ -50,18 +49,36 @@ export default class Hex {
   }
 
   capture(color) {
-    if (this.captured) {
+    if (this.captured || this.score === 0) {
       return
     }
     this.captured = true
     this.sprite.tint = color
   }
 
-  disable() {
-    this.sprite.alpha = 0.25
+  destroy() {
+    this.destroyed = true
+    this.sprite.alpha = 0
+    this.coinSprite.alpha = 0
+    this.textObject.alpha = 0
   }
 
   nullifyPiece() {
     this.piece = null
+  }
+
+  setScore(score) {
+    if (score > 0) {
+      this.coinSprite.alpha = 1
+    } else {
+      this.coinSprite.alpha = 0
+    }
+
+    this.score = score
+    if (score === 2) {
+      this.coinSprite.setScale(0.5)
+    } else if (score === 1) {
+      this.coinSprite.setScale(0.2)
+    }
   }
 }
