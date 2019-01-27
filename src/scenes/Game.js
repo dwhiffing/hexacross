@@ -1,8 +1,10 @@
 import HexService from '../services/HexService'
 import LinkService from '../services/LinkService'
 
-const RED = 0xff0000
-const BLUE = 0x0000ff
+export const RED = 0xaa3377
+export const RED_STRING = '#aa3377'
+export const BLUE = 0x339933
+export const BLUE_STRING = '#339933'
 
 const STARTING_COORDS = [
   [{ x: 3, y: 0, color: RED }, { x: 5, y: 0, color: RED }],
@@ -57,8 +59,8 @@ export default class extends Phaser.Scene {
     })
 
     this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
-    this.redTurnTimerBar = this.add.graphics({ fillStyle: { color: 0xff0000 } })
-    this.blueTurnTimerBar = this.add.graphics({ fillStyle: { color: 0x0000ff } })
+    this.redTurnTimerBar = this.add.graphics({ fillStyle: { color: RED } })
+    this.blueTurnTimerBar = this.add.graphics({ fillStyle: { color: BLUE } })
     const rect = new Phaser.Geom.Rectangle(
       0,
       this.game.config.height - 10,
@@ -73,14 +75,14 @@ export default class extends Phaser.Scene {
     this.redScoreTextObject = this.add.text(10, 10, '0', {
       fontFamily: 'Arial',
       fontSize: 26,
-      color: '#ff0000',
+      color: RED_STRING,
       align: 'left',
     })
 
     this.blueScoreTextObject = this.add.text(this.game.config.width - 50, 10, '0', {
       fontFamily: 'Arial',
       fontSize: 26,
-      color: '#0000ff',
+      color: BLUE_STRING,
       align: 'left',
     })
     this.redScore = 0

@@ -1,3 +1,5 @@
+import { RED } from '../scenes/Game'
+
 export default class Hex {
   constructor(y, x, position, scene, xOffset, yOffset) {
     this.scene = scene
@@ -8,6 +10,18 @@ export default class Hex {
     this.gridY = y
     this.coinSprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'coin')
     this.coinSprite.alpha = 0
+    this.redNodeSprite = this.scene.add.sprite(
+      position.x + xOffset,
+      position.y + yOffset,
+      'nodePink',
+    )
+    this.redNodeSprite.alpha = 0
+    this.blueNodeSprite = this.scene.add.sprite(
+      position.x + xOffset,
+      position.y + yOffset,
+      'nodeGreen',
+    )
+    this.blueNodeSprite.alpha = 0
     this.textObject = this.scene.add.text(
       this.sprite.x - 20,
       this.sprite.y - 10,
@@ -53,7 +67,13 @@ export default class Hex {
       return
     }
     this.captured = true
-    this.sprite.tint = color
+    if (color === RED) {
+      this.redNodeSprite.alpha = 1
+      this.redNodeSprite.setScale(0.15)
+    } else {
+      this.blueNodeSprite.alpha = 1
+      this.blueNodeSprite.setScale(0.15)
+    }
   }
 
   destroy() {
@@ -61,6 +81,8 @@ export default class Hex {
     this.sprite.alpha = 0
     this.coinSprite.alpha = 0
     this.textObject.alpha = 0
+    this.redNodeSprite.alpha = 0
+    this.blueNodeSprite.alpha = 0
   }
 
   nullifyPiece() {
