@@ -93,20 +93,18 @@ export default class extends Phaser.Scene {
     this.blueHexes = []
     this.redHexes = []
 
-    const { canvas } = this.sys.game
-    const deviceFullscreen = this.sys.game.device.fullscreen
-    this.toggleFullscreen = function () {
-      canvas[deviceFullscreen.request]()
-      setTimeout(window.resize, 5000)
-    }
+    // const { canvas } = this.sys.game
+    // const deviceFullscreen = this.sys.game.device.fullscreen
+    // this.toggleFullscreen = function () {
+    //   canvas[deviceFullscreen.request]()
+    // }
+    // document.querySelector('#phaser-example').addEventListener('click', this.toggleFullscreen)
 
     const restart = this.add
       .image(this.game.config.width - 40, this.game.config.height - 70, 'fullscreen')
       .setInteractive()
     restart.on('pointerup', this.restart)
     restart.setScale(0.25)
-
-    document.querySelector('#phaser-example').addEventListener('click', this.toggleFullscreen)
 
     this.resize()
   }
