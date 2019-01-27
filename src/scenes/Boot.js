@@ -26,6 +26,7 @@ export default class extends Phaser.Scene {
       frameHeight: 166,
     })
     this.load.image('handle', 'assets/images/handle1.png')
+    this.load.image('handle2', 'assets/images/handle2.png')
     this.load.spritesheet('hexagon', 'assets/images/hex.png', {
       frameWidth: 392,
       frameHeight: 452,

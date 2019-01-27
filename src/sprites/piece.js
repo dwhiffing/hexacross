@@ -1,10 +1,15 @@
 import { ANIMATION_SPEED } from '../scenes/Game'
+import { RED } from '../scenes/Game'
 
 export default class Piece {
   constructor(scene, hex, color) {
     this.color = color
     this.scene = scene
-    this.sprite = this.scene.add.image(hex.sprite.x, hex.sprite.y - 2, 'handle')
+    this.sprite = this.scene.add.image(
+      hex.sprite.x,
+      hex.sprite.y - 2,
+      color === RED ? 'handle' : 'handle2',
+    )
     this.sprite.displayWidth = 55
     this.sprite.displayHeight = 55
   }

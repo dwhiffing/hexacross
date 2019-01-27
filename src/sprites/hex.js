@@ -80,13 +80,15 @@ export default class Hex {
   tweenNode(color, index) {
     this.color = color
     const sprite = color === RED ? this.redNodeSprite : this.blueNodeSprite
-    if (!this.particles) {
-      this.particles = this.scene.add.particles('particle-green')
-      this.emitter = this.particles.createEmitter({
+    if (!this.redParticles) {
+      this.redParticles = this.scene.add.particles('particle-pink')
+      this.blueParticles = this.scene.add.particles('particle-green')
+      const particles = color === RED ? this.redParticles : this.blueParticles
+      this.emitter = particles.createEmitter({
         speed: { min: -250, max: 250 },
         scale: { start: 0.3, end: 0 },
         alpha: 0.5,
-        // blendMode: 'ADD',
+        blendMode: 'SCREEN',
         active: false,
         quantity: 15,
         lifespan: { min: 600, max: 900 },
@@ -103,7 +105,7 @@ export default class Hex {
       duration: 750 * ANIMATION_SPEED,
       onComplete: () => {
         this.emitter.setPosition(this.sprite.x, this.sprite.y)
-        this.emitter.setAlpha(0.1 + 0.2 * index)
+        this.emitter.setAlpha(0.5 + 0.1 * index)
         this.emitter.setQuantity(25 + 5 * index)
         this.emitter.active = true
         this.emitter.explode()

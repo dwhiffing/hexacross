@@ -63,7 +63,7 @@ export default class extends Phaser.Scene {
       }
     })
 
-    this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
+    this.turnTimerDisabled = true
     this.redTurnTimerBar = this.add.graphics({ fillStyle: { color: RED } })
     this.blueTurnTimerBar = this.add.graphics({ fillStyle: { color: BLUE } })
     const rect = new Phaser.Geom.Rectangle(
@@ -95,23 +95,28 @@ export default class extends Phaser.Scene {
     this.blueHexes = []
     this.redHexes = []
 
-    // const { canvas } = this.sys.game
-    // const deviceFullscreen = this.sys.game.device.fullscreen
-    // this.toggleFullscreen = function () {
-    //   canvas[deviceFullscreen.request]()
-    // }
-    // document.querySelector('#phaser-example').addEventListener('click', this.toggleFullscreen)
-
     const restart = this.add
       .image(this.game.config.width - 40, this.game.config.height - 70, 'fullscreen')
       .setInteractive()
     restart.on('pointerup', this.restart)
     restart.setScale(0.25)
 
+    const disableTurnTimerButton = this.add
+      .image(this.game.config.width - 120, this.game.config.height - 70, 'fullscreen')
+      .setInteractive()
+    disableTurnTimerButton.on('pointerup', this.disableTurnTimer.bind(this))
+    disableTurnTimerButton.setScale(0.25)
+
     this.resize()
+
+    const func = this.turnTimerDisabled ? () => {} : this.nextTurn
+    this.turnTimer = this.time.delayedCall(TURN_DURATION, func, [], this)
   }
 
   update() {
+    if (this.turnTimerDisabled) {
+      return
+    }
     if (this.activeTurnColor === BLUE) {
       this.blueTurnTimerBar.setScale(1 - this.turnTimer.getProgress(), 1)
       this.redTurnTimerBar.setScale(0)
@@ -122,7 +127,9 @@ export default class extends Phaser.Scene {
   }
 
   nextTurn() {
-    this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
+    if (!this.turnTimerDisabled) {
+      this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
+    }
     this.linkService.drawLinks()
     this.destroyIntersection()
     this.captureNodes()
@@ -133,6 +140,9 @@ export default class extends Phaser.Scene {
       console.log('GAME OVER!')
     }
 
+    if (this.activeHex) {
+      this.hexService.deselectHex(this.activeHex)
+    }
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
   }
 
@@ -250,5 +260,14 @@ export default class extends Phaser.Scene {
 
   restart() {
     this.scene.restart()
+  }
+
+  disableTurnTimer() {
+    this.turnTimerDisabled = !this.turnTimerDisabled
+    if (this.turnTimerDisabled) {
+      this.blueTurnTimerBar.setScale(0)
+      this.redTurnTimerBar.setScale(0)
+      this.turnTimer.destroy()
+    }
   }
 }
