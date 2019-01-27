@@ -25,8 +25,8 @@ export default class extends Phaser.Scene {
     })
     this.load.image('handle', 'assets/images/handle1.png')
     this.load.spritesheet('hexagon', 'assets/images/hex.png', {
-      frameWidth: 390,
-      frameHeight: 450,
+      frameWidth: 392,
+      frameHeight: 452,
     })
     // this.textures.addBase64('hexagon', hexURI)
 

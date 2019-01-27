@@ -8,6 +8,7 @@ const width = document.documentElement.clientWidth
 const height = document.documentElement.clientHeight
 
 const game = new Phaser.Game({
+  transparent: true,
   type: Phaser.AUTO,
   parent: 'phaser-example',
   width,
@@ -19,16 +20,14 @@ const game = new Phaser.Game({
     resolution: window.devicePixelRatio,
   },
   plugins: {
-    global: [
-      {
-        key: 'GameScalePlugin',
-        plugin: GameScalePlugin,
-        mapping: 'gameScale',
-        data: {
-          /* See 'Configuration' */
-        },
+    global: [{
+      key: 'GameScalePlugin',
+      plugin: GameScalePlugin,
+      mapping: 'gameScale',
+      data: {
+        /* See 'Configuration' */
       },
-    ],
+    }, ],
   },
 })
 
