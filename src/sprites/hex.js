@@ -1,4 +1,4 @@
-import { RED } from '../scenes/Game'
+import { RED, ANIMATION_SPEED } from '../scenes/Game'
 
 export default class Hex {
   constructor(y, x, position, scene, xOffset = 0, yOffset = 0) {
@@ -39,7 +39,7 @@ export default class Hex {
   }
 
   select() {
-    if (this.captured) {
+    if (this.captured || this.destroyed) {
       return
     }
     this.active = true
@@ -47,7 +47,7 @@ export default class Hex {
   }
 
   deselect() {
-    if (this.captured) {
+    if (this.captured || this.destroyed) {
       return
     }
     this.active = false
@@ -55,7 +55,7 @@ export default class Hex {
   }
 
   hover() {
-    if (this.captured) {
+    if (this.captured || this.destroyed) {
       return
     }
     if (!this.active) {
@@ -67,7 +67,14 @@ export default class Hex {
     if (this.score === 0 || this.destroyed || this.color === color) {
       return
     }
-    this.tweenNode(color, index)
+
+    if (this.captured) {
+      this.replaceNode(color, index)
+    } else {
+      this.tweenNode(color, index)
+    }
+
+    this.captured = true
   }
 
   tweenNode(color, index) {
@@ -92,8 +99,8 @@ export default class Hex {
       scaleX: this.scene.game.scaleFactor * 0.25,
       scaleY: this.scene.game.scaleFactor * 0.25,
       ease: 'Bounce.easeOut',
-      delay: index * 300,
-      duration: 750,
+      delay: index * 200 * ANIMATION_SPEED,
+      duration: 750 * ANIMATION_SPEED,
       onComplete: () => {
         this.emitter.setPosition(this.sprite.x, this.sprite.y)
         this.emitter.setAlpha(0.1 + 0.2 * index)
@@ -101,6 +108,21 @@ export default class Hex {
         this.emitter.active = true
         this.emitter.explode()
       },
+    })
+  }
+
+  replaceNode(color, index) {
+    const sprite = color === RED ? this.blueNodeSprite : this.redNodeSprite
+
+    this.scene.tweens.add({
+      targets: sprite,
+      alpha: 1,
+      scaleX: 0,
+      scaleY: 0,
+      ease: 'Linear',
+      delay: 0,
+      duration: 100 * ANIMATION_SPEED,
+      onComplete: () => this.tweenNode(color, index),
     })
   }
 

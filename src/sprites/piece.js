@@ -1,3 +1,5 @@
+import { ANIMATION_SPEED } from '../scenes/Game'
+
 export default class Piece {
   constructor(scene, hex, color) {
     this.color = color
@@ -14,7 +16,7 @@ export default class Piece {
       x: toHex.hexObject.sprite.x,
       y: toHex.hexObject.sprite.y - 2,
       ease: 'Power1',
-      duration: 500,
+      duration: 500 * ANIMATION_SPEED,
       onUpdate: (tween, image) => {
         this.pair.graphics.clear()
         const { x, y } = this.link.sprite

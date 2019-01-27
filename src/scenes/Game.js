@@ -5,6 +5,7 @@ export const RED = 0xaa3377
 export const RED_STRING = '#aa3377'
 export const BLUE = 0x339933
 export const BLUE_STRING = '#339933'
+export const ANIMATION_SPEED = 1
 
 const STARTING_COORDS = [
   [{ x: 3, y: 0, color: RED }, { x: 5, y: 0, color: RED }],
@@ -34,6 +35,7 @@ export default class extends Phaser.Scene {
   }
 
   create() {
+    this.turn = 0
     this.activeTurnColor = RED
     this.hexService = new HexService(this)
     this.setScale()
@@ -124,6 +126,13 @@ export default class extends Phaser.Scene {
     this.linkService.drawLinks()
     this.destroyIntersection()
     this.captureNodes()
+    this.turn++
+
+    if (this.turn === 10) {
+      this.activeTurnColor = null
+      console.log('GAME OVER!')
+    }
+
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
   }
 
