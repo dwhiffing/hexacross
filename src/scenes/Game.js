@@ -77,19 +77,20 @@ export default class extends Phaser.Scene {
     this.blueTurnTimerBar.setScale(0)
     this.redTurnTimerBar.setScale(0)
 
-    this.redScoreTextObject = this.add.text(10, 10, '0', {
-      fontFamily: 'Arial',
-      fontSize: 26,
+    this.redScoreTextObject = this.add.text(30, 50, 'P1: 0', {
+      fontFamily: 'sans-serif',
+      fontSize: 24,
       color: '#ffffff',
       align: 'left',
     })
 
-    this.blueScoreTextObject = this.add.text(this.game.config.width - 50, 10, '0', {
-      fontFamily: 'Arial',
-      fontSize: 26,
+    this.blueScoreTextObject = this.add.text(this.game.config.width - 30, 50, 'P2: 0', {
+      fontFamily: 'sans-serif',
+      fontSize: 24,
       color: '#ffffff',
-      align: 'left',
+      align: 'right',
     })
+    this.blueScoreTextObject.setOrigin(1, 0)
     this.redScore = 0
     this.blueScore = 0
     this.blueHexes = []
@@ -152,9 +153,6 @@ export default class extends Phaser.Scene {
       this.linkService.links[1].emitter.setAlpha(1)
       this.linkService.links[0].emitter.setAlpha(0.25)
     }
-    this.linkService.links.forEach((pair) => {
-      pair
-    })
 
     if (this.activeHex) {
       this.hexService.deselectHex(this.activeHex)
@@ -238,17 +236,16 @@ export default class extends Phaser.Scene {
         this.blueHexes.push(hex)
       }
     })
-    this.redScore = this.redHexes.filter(this.hexesWithScore).length
-    this.redScore += this.redHexes
-      .filter(this.hexesWithScore)
-      .filter(hex => hex.hexObject.score === 2).length
-    this.redScoreTextObject.text = `${this.redScore}`
+    this.redScore = this.redHexes.filter(this.hexesWithScore).length * 10
+    this.redScore
+      += this.redHexes.filter(this.hexesWithScore).filter(hex => hex.hexObject.score === 2).length * 10
+    this.redScoreTextObject.text = `P1: ${this.redScore}`
 
-    this.blueScore = this.blueHexes.filter(this.hexesWithScore).length
-    this.blueScore += this.blueHexes
-      .filter(this.hexesWithScore)
-      .filter(hex => hex.hexObject.score === 2).length
-    this.blueScoreTextObject.text = `${this.blueScore}`
+    this.blueScore = this.blueHexes.filter(this.hexesWithScore).length * 10
+    this.blueScore
+      += this.blueHexes.filter(this.hexesWithScore).filter(hex => hex.hexObject.score === 2).length
+      * 10
+    this.blueScoreTextObject.text = `P2: ${this.blueScore}`
   }
 
   hexesWithScore(hex) {
