@@ -15,12 +15,14 @@ export default class Hex {
       'nodePink',
     )
     this.redNodeSprite.alpha = 0
+    this.redNodeSprite.setScale(0)
     this.blueNodeSprite = this.scene.add.sprite(
       position.x + xOffset,
       position.y + yOffset,
       'nodeGreen',
     )
     this.blueNodeSprite.alpha = 0
+    this.blueNodeSprite.setScale(0)
     this.textObject = this.scene.add.text(
       this.sprite.x - 20,
       this.sprite.y - 10,
@@ -61,16 +63,45 @@ export default class Hex {
     }
   }
 
-  capture(color) {
+  capture(color, index = 0) {
     if (this.captured || this.score === 0) {
       return
     }
     this.captured = true
-    if (color === RED) {
-      this.redNodeSprite.alpha = 1
-    } else {
-      this.blueNodeSprite.alpha = 1
+    this.tweenNode(color, index)
+  }
+
+  tweenNode(color, index) {
+    const sprite = color === RED ? this.redNodeSprite : this.blueNodeSprite
+    if (!this.particles) {
+      this.particles = this.scene.add.particles('blue')
+      this.emitter = this.particles.createEmitter({
+        speed: { min: -250, max: 250 },
+        scale: { start: 0.3, end: 0 },
+        alpha: 0.5,
+        blendMode: 'ADD',
+        active: false,
+        quantity: 15,
+        lifespan: { min: 600, max: 900 },
+        gravityY: 0,
+      })
     }
+    this.scene.tweens.add({
+      targets: sprite,
+      alpha: 1,
+      scaleX: this.scene.game.scaleFactor * 0.25,
+      scaleY: this.scene.game.scaleFactor * 0.25,
+      ease: 'Bounce.easeOut',
+      delay: index * 300,
+      duration: 750,
+      onComplete: () => {
+        this.emitter.setPosition(this.sprite.x, this.sprite.y)
+        this.emitter.setAlpha(0.1 + 0.2 * index)
+        this.emitter.setQuantity(25 + 5 * index)
+        this.emitter.active = true
+        this.emitter.explode()
+      },
+    })
   }
 
   destroy() {

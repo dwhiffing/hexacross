@@ -189,9 +189,10 @@ export default class extends Phaser.Scene {
       )
     }
 
-    const slice = hexes.slice(1, hexes.length - 1)
-    slice.forEach((hex) => {
-      hex.hexObject.capture(this.activeTurnColor)
+    const slice = hexes.slice(1, hexes.length - 1).reverse()
+
+    slice.forEach((hex, index) => {
+      hex.hexObject.capture(this.activeTurnColor, index)
       if (hex.captured) {
         return
       }

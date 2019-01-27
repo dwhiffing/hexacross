@@ -130,8 +130,6 @@ export default class HexService {
   resize(scale) {
     this.hexGrid.forEach((hex) => {
       hex.hexObject.sprite.setScale(scale * 0.26)
-      hex.hexObject.redNodeSprite.setScale(scale * 0.25)
-      hex.hexObject.blueNodeSprite.setScale(scale * 0.25)
     })
   }
 }
