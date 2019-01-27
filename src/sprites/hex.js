@@ -129,6 +129,9 @@ export default class Hex {
   }
 
   destroy() {
+    if (this.destroyed) {
+      return
+    }
     this.destroyed = true
     this.sprite.setFrame(2)
     this.coinSprite.alpha = 0

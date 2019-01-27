@@ -80,14 +80,14 @@ export default class extends Phaser.Scene {
     this.redScoreTextObject = this.add.text(10, 10, '0', {
       fontFamily: 'Arial',
       fontSize: 26,
-      color: RED_STRING,
+      color: '#ffffff',
       align: 'left',
     })
 
     this.blueScoreTextObject = this.add.text(this.game.config.width - 50, 10, '0', {
       fontFamily: 'Arial',
       fontSize: 26,
-      color: BLUE_STRING,
+      color: '#ffffff',
       align: 'left',
     })
     this.redScore = 0
@@ -106,6 +106,9 @@ export default class extends Phaser.Scene {
       .setInteractive()
     disableTurnTimerButton.on('pointerup', this.disableTurnTimer.bind(this))
     disableTurnTimerButton.setScale(0.25)
+
+    const title = this.add.image(this.game.config.width / 2, 70, 'title')
+    title.setScale(0.5)
 
     this.resize()
 
@@ -130,7 +133,8 @@ export default class extends Phaser.Scene {
     if (!this.turnTimerDisabled) {
       this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
     }
-    this.linkService.drawLinks()
+    this.linkService.drawLinks(this.activeTurnColor)
+
     this.destroyIntersection()
     this.captureNodes()
     this.turn++
@@ -140,10 +144,21 @@ export default class extends Phaser.Scene {
       console.log('GAME OVER!')
     }
 
+    this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
+    if (this.activeTurnColor === RED) {
+      this.linkService.links[0].emitter.setAlpha(1)
+      this.linkService.links[1].emitter.setAlpha(0.25)
+    } else {
+      this.linkService.links[1].emitter.setAlpha(1)
+      this.linkService.links[0].emitter.setAlpha(0.25)
+    }
+    this.linkService.links.forEach((pair) => {
+      pair
+    })
+
     if (this.activeHex) {
       this.hexService.deselectHex(this.activeHex)
     }
-    this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
   }
 
   onMoveMouse(pointer) {

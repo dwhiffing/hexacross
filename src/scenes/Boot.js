@@ -15,16 +15,13 @@ export default class extends Phaser.Scene {
     })
 
     this.load.image('coin', 'assets/images/coin.png')
+    this.load.image('title', 'assets/images/title.png')
     this.load.image('particle-green', 'assets/images/particle-green.png')
     this.load.image('particle-pink', 'assets/images/particle-pink.png')
     this.load.image('fullscreen', 'assets/images/fullscreen.png')
     this.load.image('nodeGreen', 'assets/images/hexg.png')
     this.load.image('nodePink', 'assets/images/hexp.png')
     this.load.image('title', 'assets/images/title.png')
-    this.load.spritesheet('tiles', 'assets/images/tiles.png', {
-      frameWidth: 166,
-      frameHeight: 166,
-    })
     this.load.image('handle', 'assets/images/handle1.png')
     this.load.image('handle2', 'assets/images/handle2.png')
     this.load.spritesheet('hexagon', 'assets/images/hex.png', {

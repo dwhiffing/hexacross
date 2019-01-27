@@ -36,19 +36,18 @@ export default class LinkService {
       pair.emitter = pair.particles.createEmitter({
         y: -200,
         scale: { start: 0.3, end: 0 },
+        alpha: 0.25,
         blendMode: 'SCREEN',
         emitZone: { type: 'random', source: curve, quantity: 200 },
       })
     })
 
+    this.links[0].emitter.setAlpha(1)
+
     this.resize = this.resize.bind(this)
   }
 
   drawLink(pair) {
-    if (pair.graphics) {
-      pair.graphics.clear()
-    }
-    pair.graphics = this.scene.add.graphics({ lineStyle: { width: 8, color: pair.color } })
     pair[0].pair = pair
     pair[1].pair = pair
 
