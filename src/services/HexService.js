@@ -23,7 +23,6 @@ export default class HexService {
       render() {
         const position = this.toPoint()
         const hex = new Hex(this.x, this.y, position, scene, xOffset, yOffset)
-        // hex.textObject.text = `${this.q}, ${this.r}, ${this.s}`
         this.hexObject = hex
       },
     })

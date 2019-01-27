@@ -15,6 +15,7 @@ export default class extends Phaser.Scene {
     })
 
     this.load.image('coin', 'assets/images/coin.png')
+    this.load.image('fullscreen', 'assets/images/fullscreen.png')
     this.load.image('nodeGreen', 'assets/images/hexg.png')
     this.load.image('nodePink', 'assets/images/hexp.png')
     this.load.image('title', 'assets/images/title.png')
