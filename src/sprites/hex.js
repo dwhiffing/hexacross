@@ -74,12 +74,12 @@ export default class Hex {
   tweenNode(color, index) {
     const sprite = color === RED ? this.redNodeSprite : this.blueNodeSprite
     if (!this.particles) {
-      this.particles = this.scene.add.particles('blue')
+      this.particles = this.scene.add.particles('particle-green')
       this.emitter = this.particles.createEmitter({
         speed: { min: -250, max: 250 },
         scale: { start: 0.3, end: 0 },
         alpha: 0.5,
-        blendMode: 'ADD',
+        // blendMode: 'ADD',
         active: false,
         quantity: 15,
         lifespan: { min: 600, max: 900 },
