@@ -1,10 +1,12 @@
-import { RED, ANIMATION_SPEED } from '../scenes/Game'
+import {
+  RED,
+  ANIMATION_SPEED
+} from '../scenes/Game'
 
 export default class Hex {
   constructor(y, x, position, scene, xOffset = 0, yOffset = 0) {
     this.scene = scene
     this.sprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'hexagon')
-
     this.gridX = x
     this.gridY = y
     this.coinSprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'coin')
@@ -26,8 +28,7 @@ export default class Hex {
     this.textObject = this.scene.add.text(
       this.sprite.x - 20,
       this.sprite.y - 10,
-      `${this.gridX}, ${this.gridY}`,
-      {
+      `${this.gridX}, ${this.gridY}`, {
         fontFamily: 'Arial',
         fontSize: 18,
         color: '#ffffff',
@@ -85,13 +86,22 @@ export default class Hex {
       this.blueParticles = this.scene.add.particles('particle-green')
       const particles = color === RED ? this.redParticles : this.blueParticles
       this.emitter = particles.createEmitter({
-        speed: { min: -250, max: 250 },
-        scale: { start: 0.3, end: 0 },
+        speed: {
+          min: -250,
+          max: 250
+        },
+        scale: {
+          start: 0.3,
+          end: 0
+        },
         alpha: 0.5,
         blendMode: 'SCREEN',
         active: false,
         quantity: 15,
-        lifespan: { min: 600, max: 900 },
+        lifespan: {
+          min: 600,
+          max: 900
+        },
         gravityY: 0,
       })
     }
@@ -104,6 +114,7 @@ export default class Hex {
       delay: index * 200 * ANIMATION_SPEED,
       duration: 750 * ANIMATION_SPEED,
       onComplete: () => {
+        this.scene.playSound('capture')
         this.emitter.setPosition(this.sprite.x, this.sprite.y)
         this.emitter.setAlpha(0.5 + 0.1 * index)
         this.emitter.setQuantity(25 + 5 * index)
@@ -116,6 +127,7 @@ export default class Hex {
   replaceNode(color, index) {
     const sprite = color === RED ? this.blueNodeSprite : this.redNodeSprite
 
+    this.scene.playSound('recapture')
     this.scene.tweens.add({
       targets: sprite,
       alpha: 1,
@@ -132,6 +144,8 @@ export default class Hex {
     if (this.destroyed) {
       return
     }
+
+    this.scene.playSound('destroy')
     this.destroyed = true
     this.sprite.setFrame(2)
     this.coinSprite.alpha = 0
@@ -143,13 +157,22 @@ export default class Hex {
     this.pinkParticles = this.scene.add.particles('particle-pink')
 
     const emitterOptions = {
-      speed: { min: -250, max: 250 },
-      scale: { start: 0.3, end: 0 },
+      speed: {
+        min: -250,
+        max: 250
+      },
+      scale: {
+        start: 0.3,
+        end: 0
+      },
       alpha: 0.5,
       blendMode: 'SCREEN',
       active: false,
       quantity: 30,
-      lifespan: { min: 600, max: 900 },
+      lifespan: {
+        min: 600,
+        max: 900
+      },
       gravityY: 0,
     }
 

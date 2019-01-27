@@ -35,6 +35,13 @@ export default class extends Phaser.Scene {
   }
 
   create() {
+    this.sounds = {}
+    this.sounds.recapture = this.sound.add('recaptureNodeSound')
+    this.sounds.capture = this.sound.add('captureNodeSound')
+    this.sounds.move = this.sound.add('moveToNodeSound')
+    this.sounds.click = this.sound.add('clickSound')
+    this.sounds.destroy = this.sound.add('destroyNodeSound')
+
     this.turn = 0
     this.activeTurnColor = RED
     this.hexService = new HexService(this)
@@ -126,6 +133,12 @@ export default class extends Phaser.Scene {
     const title = this.add.image(this.game.config.width / 2, 70, 'title')
     title.setScale(0.5)
 
+    this.disableSoundButton = this.add
+      .image(this.game.config.width - 90, this.game.config.height - 70, 'sound')
+      .setInteractive()
+    this.disableSoundButton.on('pointerup', this.disableSound.bind(this))
+    this.disableSoundButton.setScale(0.065)
+
     this.resize()
 
     const func = this.turnTimerDisabled ? () => {} : this.nextTurn
@@ -146,6 +159,7 @@ export default class extends Phaser.Scene {
   }
 
   nextTurn() {
+    this.playSound('move')
     if (!this.turnTimerDisabled) {
       this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
     }
@@ -185,6 +199,7 @@ export default class extends Phaser.Scene {
   }
 
   onClickMouse(pointer) {
+    this.playSound('click')
     const clickedHex = this.hexService.getHexFromScreenPos(pointer)
     if (!clickedHex) {
       return
@@ -299,6 +314,22 @@ export default class extends Phaser.Scene {
       this.blueTurnTimerBar.setScale(0)
       this.redTurnTimerBar.setScale(0)
       this.turnTimer.destroy()
+    }
+  }
+
+  disableSound() {
+    this.muted = !this.muted
+    this.disableSoundButton.alpha = this.muted ? 0.5 : 1
+  }
+
+  playSound(key) {
+    if (this.muted) {
+      return
+    }
+
+    const sound = this.sounds[key]
+    if (sound) {
+      sound.play()
     }
   }
 }
