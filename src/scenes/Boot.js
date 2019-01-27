@@ -14,7 +14,13 @@ export default class extends Phaser.Scene {
       progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60)
     })
 
+    this.load.image('credits', 'assets/images/credits.jpg')
+    this.load.image('p1-win', 'assets/images/p1-win.png')
+    this.load.image('p2-win', 'assets/images/p2-win.png')
     this.load.image('coin', 'assets/images/coin.png')
+    this.load.image('exit', 'assets/images/exit.png')
+    this.load.image('play', 'assets/images/play.png')
+    this.load.image('menu-bubble', 'assets/images/menu-bubble.png')
     this.load.image('title', 'assets/images/title.png')
     this.load.image('particle-green', 'assets/images/particle-green.png')
     this.load.image('particle-pink', 'assets/images/particle-pink.png')
@@ -32,8 +38,7 @@ export default class extends Phaser.Scene {
 
     this.load.on('complete', () => {
       progress.destroy()
-      // this.scene.start('Menu')
-      this.scene.start('Game')
+      this.scene.start('Menu')
     })
   }
 }

@@ -96,17 +96,32 @@ export default class extends Phaser.Scene {
     this.blueHexes = []
     this.redHexes = []
 
-    const restart = this.add
-      .image(this.game.config.width - 40, this.game.config.height - 70, 'fullscreen')
-      .setInteractive()
-    restart.on('pointerup', this.restart)
-    restart.setScale(0.25)
+    // const disableTurnTimerButton = this.add
+    //   .image(this.game.config.width - 70, this.game.config.height - 70, 'fullscreen')
+    //   .setInteractive()
+    // disableTurnTimerButton.on('pointerup', this.disableTurnTimer.bind(this))
+    // disableTurnTimerButton.setScale(0.25)
 
-    const disableTurnTimerButton = this.add
-      .image(this.game.config.width - 120, this.game.config.height - 70, 'fullscreen')
+    this.back = this.add
+      .text(20, document.documentElement.clientHeight - 120, 'Exit', {
+        fontFamily: 'sans-serif',
+        fontSize: 24,
+      })
       .setInteractive()
-    disableTurnTimerButton.on('pointerup', this.disableTurnTimer.bind(this))
-    disableTurnTimerButton.setScale(0.25)
+    this.credits = this.add
+      .text(20, document.documentElement.clientHeight - 70, 'Credits', {
+        fontFamily: 'sans-serif',
+        fontSize: 24,
+      })
+      .setInteractive()
+
+    this.back.on('pointerdown', () => {
+      this.scene.start('Menu')
+    })
+
+    this.credits.on('pointerdown', () => {
+      this.scene.start('Credits')
+    })
 
     const title = this.add.image(this.game.config.width / 2, 70, 'title')
     title.setScale(0.5)
@@ -141,8 +156,12 @@ export default class extends Phaser.Scene {
     this.turn++
 
     if (this.turn === 10) {
+      if (this.blueScore > this.redScore) {
+        this.scene.start('BlueVictory')
+      } else {
+        this.scene.start('RedVictory')
+      }
       this.activeTurnColor = null
-      console.log('GAME OVER!')
     }
 
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE

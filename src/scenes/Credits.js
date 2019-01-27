@@ -1,7 +1,7 @@
 export default class extends Phaser.Scene {
   constructor() {
     super({
-      key: 'Menu',
+      key: 'Credits',
     })
   }
 
@@ -16,9 +16,11 @@ export default class extends Phaser.Scene {
       }
     }
 
-    this.background = this.add.sprite(document.documentElement.clientWidth / 2, 150, 'title')
-    this.background.setScale(0.5)
-    this.bubble = this.add.sprite(document.documentElement.clientWidth / 2, 500, 'menu-bubble')
+    this.bubble = this.add.sprite(
+      document.documentElement.clientWidth / 2,
+      document.documentElement.clientHeight / 2,
+      'credits',
+    )
     this.bubble.setScale(this.game.scaleFactor)
 
     this.play = this.add
@@ -26,17 +28,6 @@ export default class extends Phaser.Scene {
       .setInteractive()
 
     this.play.setScale(this.game.scaleFactor * 0.5)
-
-    this.tweens.add({
-      targets: this.bubble,
-      alpha: 0.75,
-      scaleX: this.game.scaleFactor * 0.95,
-      scaleY: this.game.scaleFactor * 0.95,
-      ease: 'Quad.easeInOut',
-      duration: 2500,
-      yoyo: true,
-      repeat: true,
-    })
 
     this.play.on('pointerdown', () => {
       this.scene.start('Game')
