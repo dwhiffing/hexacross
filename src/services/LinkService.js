@@ -1,5 +1,6 @@
 import compact from 'lodash/compact'
 import Piece from '../sprites/piece'
+import { RED } from '../scenes/Game'
 
 export default class LinkService {
   constructor(scene, pairs) {
@@ -8,6 +9,9 @@ export default class LinkService {
     this.links = []
 
     pairs.forEach((pair) => {
+      const particles = this.scene.add.particles(
+        pair[0].color === RED ? 'particle-pink' : 'particle-green',
+      )
       pair = pair.map((hex) => {
         const piece = new Piece(scene, hex.hexObject, hex.color)
         piece.hex = hex
@@ -15,6 +19,7 @@ export default class LinkService {
         piece.sprite.setFrame(11)
         return piece
       })
+      pair.particles = particles
       pair.color = pair[0].hex.color
       pair[0].link = pair[1]
       pair[1].link = pair[0]
@@ -22,6 +27,20 @@ export default class LinkService {
     })
 
     this.drawLinks(this.links)
+
+    this.links.forEach((pair) => {
+      const { x: startX, y: startY } = pair[0].hex.hexObject.sprite
+      const { x: endX, y: endY } = pair[1].hex.hexObject.sprite
+
+      const curve = new Phaser.Curves.Spline([startX, startY + 200, endX, endY + 200])
+      pair.emitter = pair.particles.createEmitter({
+        y: -200,
+        scale: { start: 0.3, end: 0 },
+        blendMode: 'SCREEN',
+        emitZone: { type: 'random', source: curve, quantity: 200 },
+      })
+    })
+
     this.resize = this.resize.bind(this)
   }
 
@@ -32,6 +51,7 @@ export default class LinkService {
     pair.graphics = this.scene.add.graphics({ lineStyle: { width: 8, color: pair.color } })
     pair[0].pair = pair
     pair[1].pair = pair
+
     const line = new Phaser.Geom.Line(
       pair[0].hex.hexObject.sprite.x,
       pair[0].hex.hexObject.sprite.y,
@@ -40,7 +60,6 @@ export default class LinkService {
     )
     pair[0].line = line
     pair[1].line = line
-    pair.graphics.strokeLineShape(line)
   }
 
   drawLinks() {

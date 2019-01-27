@@ -1,10 +1,15 @@
 import { ANIMATION_SPEED } from '../scenes/Game'
+import { RED } from '../scenes/Game'
 
 export default class Piece {
   constructor(scene, hex, color) {
     this.color = color
     this.scene = scene
-    this.sprite = this.scene.add.image(hex.sprite.x, hex.sprite.y - 2, 'handle')
+    this.sprite = this.scene.add.image(
+      hex.sprite.x,
+      hex.sprite.y - 2,
+      color === RED ? 'handle' : 'handle2',
+    )
     this.sprite.displayWidth = 55
     this.sprite.displayHeight = 55
   }
@@ -17,16 +22,21 @@ export default class Piece {
       y: toHex.hexObject.sprite.y - 2,
       ease: 'Power1',
       duration: 500 * ANIMATION_SPEED,
-      onUpdate: (tween, image) => {
-        this.pair.graphics.clear()
-        const { x, y } = this.link.sprite
-        const line = new Phaser.Geom.Line(x, y, image.x, image.y)
-        this.pair.graphics.strokeLineShape(line)
+      onUpdate: () => {
+        const { x: startX, y: startY } = this.sprite
+        const { x: endX, y: endY } = this.link.sprite
+        const curve = new Phaser.Curves.Spline([startX, startY + 200, endX, endY + 200])
+        this.pair.emitter.setEmitZone({ type: 'random', source: curve, quantity: 200 })
       },
       onComplete: () => {
         callback()
         this.sprite.y = toHex.hexObject.sprite.y - 2
         this.sprite.x = toHex.hexObject.sprite.x
+
+        const { x: startX, y: startY } = this.sprite
+        const { x: endX, y: endY } = this.link.sprite
+        const curve = new Phaser.Curves.Spline([startX, startY + 200, endX, endY + 200])
+        this.pair.emitter.setEmitZone({ type: 'random', source: curve, quantity: 200 })
 
         this.hex.hexObject.nullifyPiece()
         toHex.piece = this
