@@ -133,6 +133,29 @@ export default class Hex {
     this.textObject.alpha = 0
     this.redNodeSprite.alpha = 0
     this.blueNodeSprite.alpha = 0
+
+    this.greenParticles = this.scene.add.particles('particle-green')
+    this.pinkParticles = this.scene.add.particles('particle-pink')
+
+    const emitterOptions = {
+      speed: { min: -250, max: 250 },
+      scale: { start: 0.3, end: 0 },
+      alpha: 0.5,
+      blendMode: 'SCREEN',
+      active: false,
+      quantity: 30,
+      lifespan: { min: 600, max: 900 },
+      gravityY: 0,
+    }
+
+    this.greenEmitter = this.greenParticles.createEmitter(emitterOptions)
+    this.pinkEmitter = this.pinkParticles.createEmitter(emitterOptions)
+    this.greenEmitter.setPosition(this.sprite.x, this.sprite.y)
+    this.pinkEmitter.setPosition(this.sprite.x, this.sprite.y)
+    this.greenEmitter.active = true
+    this.pinkEmitter.active = true
+    this.greenEmitter.explode()
+    this.pinkEmitter.explode()
   }
 
   nullifyPiece() {
