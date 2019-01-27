@@ -64,14 +64,14 @@ export default class Hex {
   }
 
   capture(color, index = 0) {
-    if (this.captured || this.score === 0) {
+    if (this.score === 0 || this.destroyed || this.color === color) {
       return
     }
-    this.captured = true
     this.tweenNode(color, index)
   }
 
   tweenNode(color, index) {
+    this.color = color
     const sprite = color === RED ? this.redNodeSprite : this.blueNodeSprite
     if (!this.particles) {
       this.particles = this.scene.add.particles('particle-green')
@@ -106,7 +106,7 @@ export default class Hex {
 
   destroy() {
     this.destroyed = true
-    this.sprite.alpha = 0
+    this.sprite.setFrame(2)
     this.coinSprite.alpha = 0
     this.textObject.alpha = 0
     this.redNodeSprite.alpha = 0
