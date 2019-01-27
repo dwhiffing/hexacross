@@ -1,10 +1,11 @@
 import 'phaser'
+import GameScalePlugin from 'phaser-plugin-game-scale'
 import BootScene from './scenes/Boot'
 import MenuScene from './scenes/Menu'
 import GameScene from './scenes/Game'
 
-const width = 800
-const height = 600
+const width = document.documentElement.clientWidth
+const height = document.documentElement.clientHeight
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -12,6 +13,23 @@ const game = new Phaser.Game({
   width,
   height,
   scene: [BootScene, MenuScene, GameScene],
+  scale: {
+    width,
+    height,
+    resolution: window.devicePixelRatio,
+  },
+  plugins: {
+    global: [
+      {
+        key: 'GameScalePlugin',
+        plugin: GameScalePlugin,
+        mapping: 'gameScale',
+        data: {
+          /* See 'Configuration' */
+        },
+      },
+    ],
+  },
 })
 
 export default game

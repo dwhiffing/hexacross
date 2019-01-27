@@ -6,6 +6,7 @@ export default class extends Phaser.Scene {
   }
 
   preload() {
+    this.gameScale.setMode('resize')
     const progress = this.add.graphics()
     this.load.on('progress', (value) => {
       progress.clear()

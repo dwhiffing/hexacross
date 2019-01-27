@@ -1,11 +1,10 @@
 import { RED } from '../scenes/Game'
 
 export default class Hex {
-  constructor(y, x, position, scene, xOffset, yOffset) {
+  constructor(y, x, position, scene, xOffset = 0, yOffset = 0) {
     this.scene = scene
     this.sprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'hexagon')
-    this.sprite.displayWidth = 70
-    this.sprite.displayHeight = 80
+
     this.gridX = x
     this.gridY = y
     this.coinSprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'coin')
@@ -69,10 +68,8 @@ export default class Hex {
     this.captured = true
     if (color === RED) {
       this.redNodeSprite.alpha = 1
-      this.redNodeSprite.setScale(0.15)
     } else {
       this.blueNodeSprite.alpha = 1
-      this.blueNodeSprite.setScale(0.15)
     }
   }
 
@@ -98,9 +95,9 @@ export default class Hex {
 
     this.score = score
     if (score === 2) {
-      this.coinSprite.setScale(0.5)
+      this.coinSprite.setScale(0.6 * this.scene.game.scaleFactor)
     } else if (score === 1) {
-      this.coinSprite.setScale(0.2)
+      this.coinSprite.setScale(0.3 * this.scene.game.scaleFactor)
     }
   }
 }

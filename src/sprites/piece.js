@@ -2,7 +2,7 @@ export default class Piece {
   constructor(scene, hex, color) {
     this.color = color
     this.scene = scene
-    this.sprite = this.scene.add.image(hex.sprite.x, hex.sprite.y - 4, 'handle')
+    this.sprite = this.scene.add.image(hex.sprite.x, hex.sprite.y - 2, 'handle')
     this.sprite.displayWidth = 55
     this.sprite.displayHeight = 55
   }
@@ -12,7 +12,7 @@ export default class Piece {
     this.scene.tweens.add({
       targets: this.sprite,
       x: toHex.hexObject.sprite.x,
-      y: toHex.hexObject.sprite.y - 4,
+      y: toHex.hexObject.sprite.y - 2,
       ease: 'Power1',
       duration: 500,
       onUpdate: (tween, image) => {
@@ -23,7 +23,7 @@ export default class Piece {
       },
       onComplete: () => {
         callback()
-        this.sprite.y = toHex.hexObject.sprite.y - 4
+        this.sprite.y = toHex.hexObject.sprite.y - 2
         this.sprite.x = toHex.hexObject.sprite.x
 
         this.hex.hexObject.nullifyPiece()

@@ -1,26 +1,28 @@
-import {
-  defineGrid,
-  extendHex
-} from 'honeycomb-grid'
+import { defineGrid, extendHex } from 'honeycomb-grid'
 import compact from 'lodash/compact'
 import sample from 'lodash/sample'
 import Hex from '../sprites/hex'
-
-const X_OFFSET = 100
-const Y_OFFSET = 60
 
 export default class HexService {
   constructor(scene) {
     this.game = scene.game
     this.scene = scene
+  }
 
+  init() {
     this.possibleMoves = []
-
+    const scene = this.scene
+    const size = parseInt(60 * this.game.scaleFactor)
+    this.size = size
+    const { clientHeight: height, clientWidth: width } = document.documentElement
+    this.xOffset = (width - size * 14) / 2
+    this.yOffset = (height - size * 12) / 2
+    const { xOffset, yOffset } = this
     this.ExtendedHex = extendHex({
-      size: 40,
+      size,
       render() {
         const position = this.toPoint()
-        const hex = new Hex(this.x, this.y, position, scene, X_OFFSET, Y_OFFSET)
+        const hex = new Hex(this.x, this.y, position, scene, xOffset, yOffset)
         // hex.textObject.text = `${this.q}, ${this.r}, ${this.s}`
         this.hexObject = hex
       },
@@ -39,9 +41,9 @@ export default class HexService {
     const hoveredHex = this.getHexFromScreenPos(pointer)
 
     if (
-      this.lastHoveredHex &&
-      !this.lastHoveredHex.active &&
-      !this.possibleMoves.includes(this.lastHoveredHex)
+      this.lastHoveredHex
+      && !this.lastHoveredHex.active
+      && !this.possibleMoves.includes(this.lastHoveredHex)
     ) {
       this.lastHoveredHex.deselect()
     }
@@ -67,29 +69,39 @@ export default class HexService {
 
     // get row
     for (let q = -10; q < 10; q++) {
-      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({
-        q,
-        r: hex.r
-      })))
+      neighbours.push(
+        this.hexGrid.get(
+          hex.cubeToCartesian({
+            q,
+            r: hex.r,
+          }),
+        ),
+      )
     }
 
     // get diagonal right
     for (let r = -10; r < 10; r++) {
-      neighbours.push(this.hexGrid.get(hex.cubeToCartesian({
-        q: hex.q,
-        r,
-        s: hex.s
-      })))
+      neighbours.push(
+        this.hexGrid.get(
+          hex.cubeToCartesian({
+            q: hex.q,
+            r,
+            s: hex.s,
+          }),
+        ),
+      )
     }
 
     // get diagonal left
     for (let r = -10; r < 10; r++) {
       neighbours.push(
-        this.hexGrid.get(hex.cubeToCartesian({
-          q: hex.q + r,
-          r: hex.r - r,
-          s: hex.s
-        })),
+        this.hexGrid.get(
+          hex.cubeToCartesian({
+            q: hex.q + r,
+            r: hex.r - r,
+            s: hex.s,
+          }),
+        ),
       )
     }
 
@@ -102,11 +114,11 @@ export default class HexService {
     this.possibleMoves = []
   }
 
-  getHexFromScreenPos({
-    x: mouseX,
-    y: mouseY
-  }) {
-    const hexCoords = this.ExtendedHexGrid.pointToHex(mouseX - 70, mouseY - 20)
+  getHexFromScreenPos({ x: mouseX, y: mouseY }) {
+    const hexCoords = this.ExtendedHexGrid.pointToHex(
+      mouseX - this.xOffset + this.size,
+      mouseY - this.yOffset + this.size,
+    )
     const hex = this.hexGrid.get(hexCoords)
 
     return hex
@@ -114,5 +126,13 @@ export default class HexService {
 
   getRandomUnoccupiedTile() {
     return sample(this.hexGrid.filter(hex => !hex.piece))
+  }
+
+  resize(scale) {
+    this.hexGrid.forEach((hex) => {
+      hex.hexObject.sprite.setScale(scale * 0.26)
+      hex.hexObject.redNodeSprite.setScale(scale * 0.25)
+      hex.hexObject.blueNodeSprite.setScale(scale * 0.25)
+    })
   }
 }

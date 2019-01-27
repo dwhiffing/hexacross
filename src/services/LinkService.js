@@ -22,6 +22,7 @@ export default class LinkService {
     })
 
     this.drawLinks(this.links)
+    this.resize = this.resize.bind(this)
   }
 
   drawLink(pair) {
@@ -60,5 +61,9 @@ export default class LinkService {
     }
 
     return { point, color: pairA.color }
+  }
+
+  resize(scaleFactor) {
+    this.links.forEach(link => link.forEach(piece => piece.sprite.setScale(scaleFactor * 0.2)))
   }
 }

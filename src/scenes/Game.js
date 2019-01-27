@@ -24,7 +24,7 @@ const SCORES = [
   [0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
-const TURN_DURATION = 5000
+const TURN_DURATION = 10000
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -36,6 +36,8 @@ export default class extends Phaser.Scene {
   create() {
     this.activeTurnColor = RED
     this.hexService = new HexService(this)
+    this.setScale()
+    this.hexService.init()
 
     this.pairs = STARTING_COORDS.map(coordPair => coordPair.map((coord, index) => {
       const hex = this.hexService.hexGrid.get(coord)
@@ -46,6 +48,7 @@ export default class extends Phaser.Scene {
 
     this.linkService = new LinkService(this, this.pairs)
 
+    this.events.on('resize', this.resize.bind(this))
     this.input.on('pointermove', this.onMoveMouse.bind(this))
     this.input.on('pointerdown', this.onClickMouse.bind(this))
 
@@ -89,6 +92,8 @@ export default class extends Phaser.Scene {
     this.blueScore = 0
     this.blueHexes = []
     this.redHexes = []
+
+    this.resize()
   }
 
   update() {
@@ -122,7 +127,11 @@ export default class extends Phaser.Scene {
     }
 
     if (this.activeHex) {
-      if (!clickedHex.piece && this.hexService.possibleMoves.includes(clickedHex)) {
+      if (
+        !clickedHex.piece
+        && !clickedHex.hexObject.destroyed
+        && this.hexService.possibleMoves.includes(clickedHex)
+      ) {
         this.movePieceToHex(this.activeHex.piece, clickedHex)
         this.activeHex.piece = null
       }
@@ -196,5 +205,23 @@ export default class extends Phaser.Scene {
 
   hexesWithScore(hex) {
     return !hex.hexObject.destroyed && hex.hexObject.score !== 0
+  }
+
+  setScale() {
+    const { clientHeight: height, clientWidth: width } = document.documentElement
+    if (height < width) {
+      this.game.scaleFactor = document.documentElement.clientHeight / 1200
+    } else {
+      this.game.scaleFactor = document.documentElement.clientWidth / 1200
+      if (this.game.scaleFactor < 0.4) {
+        this.game.scaleFactor = 0.4
+      }
+    }
+  }
+
+  resize() {
+    this.setScale()
+    this.hexService.resize(this.game.scaleFactor)
+    this.linkService.resize(this.game.scaleFactor)
   }
 }
