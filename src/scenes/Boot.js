@@ -41,7 +41,6 @@ export default class extends Phaser.Scene {
       frameWidth: 392,
       frameHeight: 452,
     })
-    // this.textures.addBase64('hexagon', hexURI)
 
     this.load.on('complete', () => {
       progress.destroy()

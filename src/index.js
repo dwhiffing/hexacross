@@ -6,6 +6,7 @@ import GameScene from './scenes/Game'
 import BlueVictoryScene from './scenes/BlueVictory'
 import CreditsScene from './scenes/Credits'
 import RedVictoryScene from './scenes/RedVictory'
+import TieScene from './scenes/Tie'
 
 const width = document.documentElement.clientWidth
 const height = document.documentElement.clientHeight
@@ -16,7 +17,15 @@ const game = new Phaser.Game({
   parent: 'phaser-example',
   width,
   height,
-  scene: [BootScene, MenuScene, GameScene, BlueVictoryScene, RedVictoryScene, CreditsScene],
+  scene: [
+    BootScene,
+    MenuScene,
+    GameScene,
+    BlueVictoryScene,
+    RedVictoryScene,
+    TieScene,
+    CreditsScene,
+  ],
   scale: {
     width,
     height,

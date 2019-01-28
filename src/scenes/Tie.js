@@ -1,7 +1,7 @@
 export default class extends Phaser.Scene {
   constructor() {
     super({
-      key: 'RedVictory',
+      key: 'Tie',
     })
   }
 
@@ -16,14 +16,19 @@ export default class extends Phaser.Scene {
       }
     }
 
+    this.credits = this.add.text(document.documentElement.clientWidth / 2, 500, 'Tie!', {
+      fontFamily: 'sans-serif',
+      fontSize: 68,
+    })
+
+    this.credits.setOrigin(0.5)
+
     this.background = this.add.sprite(document.documentElement.clientWidth / 2, 150, 'title')
     this.background.setScale(0.5)
 
-    this.p1Win = this.add.sprite(document.documentElement.clientWidth / 2, 500, 'p1-win')
-    this.p1Win.setScale(this.game.scaleFactor * 0.5)
-    this.p1Win.setInteractive()
-
-    this.p1Win.on('pointerdown', () => {
+    this.play = this.add.image(width / 2, height / 2 + height / 3, 'play').setInteractive()
+    this.play.setScale(this.game.scaleFactor * 0.7)
+    this.play.on('pointerdown', () => {
       this.scene.start('Game')
     })
   }

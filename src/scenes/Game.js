@@ -42,7 +42,7 @@ export default class extends Phaser.Scene {
     this.sounds.click = this.sound.add('clickSound')
     this.sounds.destroy = this.sound.add('destroyNodeSound')
 
-    this.turn = 0
+    this.turn = 10
     this.activeTurnColor = RED
     this.hexService = new HexService(this)
     this.setScale()
@@ -179,16 +179,16 @@ export default class extends Phaser.Scene {
 
     this.destroyIntersection()
     this.captureNodes()
-    this.turn++
-    this.turnCountText.text = `Turns: ${10 - this.turn}`
+    this.turn--
+    this.turnCountText.text = `Turns: ${this.turn}`
 
-    if (this.turn === 10) {
+    if (this.turn === 0) {
       if (this.blueScore > this.redScore) {
         this.scene.start('BlueVictory')
       } else if (this.blueScore < this.redScore) {
         this.scene.start('RedVictory')
       } else {
-        this.scene.start('Menu')
+        this.scene.start('Tie')
       }
       this.activeTurnColor = null
     }

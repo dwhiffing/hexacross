@@ -16,7 +16,7 @@ export default class HexService {
     this.size = size
     const { clientHeight: height, clientWidth: width } = document.documentElement
     this.xOffset = (width - size * 14) / 2
-    this.yOffset = (height - size * 12) / 2 - 40
+    this.yOffset = (height - size * 12) / 2
     const { xOffset, yOffset } = this
     this.ExtendedHex = extendHex({
       size,

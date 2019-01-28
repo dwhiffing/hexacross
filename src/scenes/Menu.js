@@ -19,8 +19,10 @@ export default class extends Phaser.Scene {
     this.bubble.setScale(this.game.scaleFactor * 0.85)
 
     this.play = this.add.image(width / 2, height / 2 + height / 3, 'play').setInteractive()
-
     this.play.setScale(this.game.scaleFactor * 0.7)
+    this.play.on('pointerdown', () => {
+      this.scene.start('Game')
+    })
 
     this.tweens.add({
       targets: this.bubble,
@@ -31,10 +33,6 @@ export default class extends Phaser.Scene {
       duration: 2500,
       yoyo: true,
       repeat: true,
-    })
-
-    this.play.on('pointerdown', () => {
-      this.scene.start('Game')
     })
   }
 }

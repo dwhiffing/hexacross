@@ -24,7 +24,7 @@ export default class extends Phaser.Scene {
     this.p1Win.setInteractive()
 
     this.p1Win.on('pointerdown', () => {
-      this.scene.start('Menu')
+      this.scene.start('Game')
     })
   }
 }
