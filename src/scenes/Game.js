@@ -146,7 +146,7 @@ export default class extends Phaser.Scene {
     title.setScale(this.game.scaleFactor * 0.5)
 
     this.disableSoundButton = this.add
-      .image(this.game.config.width - 90, this.game.config.height - 70, 'sound')
+      .image(this.game.config.width - 50, this.game.config.height - 70, 'sound')
       .setInteractive()
     this.disableSoundButton.on('pointerup', this.disableSound.bind(this))
     this.disableSoundButton.setScale(0.065)
