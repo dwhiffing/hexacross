@@ -24,9 +24,9 @@ export default class extends Phaser.Scene {
     this.load.image('title', 'assets/images/title.png')
     this.load.audio('moveToNodeSound', 'assets/audio/check.wav')
     this.load.audio('clickSound', 'assets/audio/click.wav')
-    this.load.audio('recaptureNodeSound', 'assets/audio/recapture.wav')
-    this.load.audio('captureNodeSound', 'assets/audio/coin.wav')
-    this.load.audio('destroyNodeSound', 'assets/audio/error.wav')
+    this.load.audio('recaptureNodeSound', 'assets/audio/recapture.mp3')
+    this.load.audio('captureNodeSound', 'assets/audio/coin.mp3')
+    this.load.audio('destroyNodeSound', 'assets/audio/error.mp3')
 
     this.load.image('sound', 'assets/images/sound.png')
     this.load.image('particle-green', 'assets/images/particle-green.png')
