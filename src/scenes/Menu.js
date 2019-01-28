@@ -8,30 +8,25 @@ export default class extends Phaser.Scene {
   create() {
     const { clientHeight: height, clientWidth: width } = document.documentElement
     if (height < width) {
-      this.game.scaleFactor = document.documentElement.clientHeight / 1200
+      this.game.scaleFactor = height / 1200
     } else {
-      this.game.scaleFactor = document.documentElement.clientWidth / 1200
-      if (this.game.scaleFactor < 0.4) {
-        this.game.scaleFactor = 0.4
-      }
+      this.game.scaleFactor = width / 1200
     }
 
-    this.background = this.add.sprite(document.documentElement.clientWidth / 2, 150, 'title')
-    this.background.setScale(0.5)
-    this.bubble = this.add.sprite(document.documentElement.clientWidth / 2, 500, 'menu-bubble')
-    this.bubble.setScale(this.game.scaleFactor)
+    this.background = this.add.sprite(width / 2, 150, 'title')
+    this.background.setScale(this.game.scaleFactor)
+    this.bubble = this.add.sprite(width / 2, height / 2, 'menu-bubble')
+    this.bubble.setScale(this.game.scaleFactor * 0.85)
 
-    this.play = this.add
-      .image(document.documentElement.clientWidth / 2, 800, 'play')
-      .setInteractive()
+    this.play = this.add.image(width / 2, height / 2 + height / 3, 'play').setInteractive()
 
-    this.play.setScale(this.game.scaleFactor * 0.5)
+    this.play.setScale(this.game.scaleFactor * 0.7)
 
     this.tweens.add({
       targets: this.bubble,
       alpha: 0.75,
-      scaleX: this.game.scaleFactor * 0.95,
-      scaleY: this.game.scaleFactor * 0.95,
+      scaleX: this.game.scaleFactor * 0.75,
+      scaleY: this.game.scaleFactor * 0.75,
       ease: 'Quad.easeInOut',
       duration: 2500,
       yoyo: true,

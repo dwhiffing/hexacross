@@ -1,7 +1,4 @@
-import {
-  defineGrid,
-  extendHex
-} from 'honeycomb-grid'
+import { defineGrid, extendHex } from 'honeycomb-grid'
 import compact from 'lodash/compact'
 import sample from 'lodash/sample'
 import Hex from '../sprites/hex'
@@ -17,16 +14,10 @@ export default class HexService {
     const scene = this.scene
     const size = parseInt(60 * this.game.scaleFactor)
     this.size = size
-    const {
-      clientHeight: height,
-      clientWidth: width
-    } = document.documentElement
+    const { clientHeight: height, clientWidth: width } = document.documentElement
     this.xOffset = (width - size * 14) / 2
-    this.yOffset = (height - size * 12) / 2
-    const {
-      xOffset,
-      yOffset
-    } = this
+    this.yOffset = (height - size * 12) / 2 - 40
+    const { xOffset, yOffset } = this
     this.ExtendedHex = extendHex({
       size,
       render() {
@@ -49,9 +40,9 @@ export default class HexService {
     const hoveredHex = this.getHexFromScreenPos(pointer)
 
     if (
-      this.lastHoveredHex &&
-      !this.lastHoveredHex.active &&
-      !this.possibleMoves.includes(this.lastHoveredHex)
+      this.lastHoveredHex
+      && !this.lastHoveredHex.active
+      && !this.possibleMoves.includes(this.lastHoveredHex)
     ) {
       this.lastHoveredHex.deselect()
     }
@@ -122,10 +113,7 @@ export default class HexService {
     this.possibleMoves = []
   }
 
-  getHexFromScreenPos({
-    x: mouseX,
-    y: mouseY
-  }) {
+  getHexFromScreenPos({ x: mouseX, y: mouseY }) {
     const hexCoords = this.ExtendedHexGrid.pointToHex(
       mouseX - this.xOffset + this.size,
       mouseY - this.yOffset + this.size,

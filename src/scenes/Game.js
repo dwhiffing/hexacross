@@ -109,6 +109,18 @@ export default class extends Phaser.Scene {
     // disableTurnTimerButton.on('pointerup', this.disableTurnTimer.bind(this))
     // disableTurnTimerButton.setScale(0.25)
 
+    this.turnCountText = this.add.text(
+      document.documentElement.clientWidth / 2,
+      document.documentElement.clientHeight - 100,
+      'Turns: 10',
+      {
+        fontFamily: 'sans-serif',
+        fontSize: 32,
+        align: 'center',
+      },
+    )
+    this.turnCountText.setOrigin(0.5, 0)
+
     this.back = this.add
       .text(20, document.documentElement.clientHeight - 120, 'Exit', {
         fontFamily: 'sans-serif',
@@ -131,7 +143,7 @@ export default class extends Phaser.Scene {
     })
 
     const title = this.add.image(this.game.config.width / 2, 70, 'title')
-    title.setScale(0.5)
+    title.setScale(this.game.scaleFactor * 0.5)
 
     this.disableSoundButton = this.add
       .image(this.game.config.width - 90, this.game.config.height - 70, 'sound')
@@ -168,6 +180,7 @@ export default class extends Phaser.Scene {
     this.destroyIntersection()
     this.captureNodes()
     this.turn++
+    this.turnCountText.text = `Turns: ${10 - this.turn}`
 
     if (this.turn === 10) {
       if (this.blueScore > this.redScore) {
