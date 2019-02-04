@@ -182,15 +182,13 @@ export default class extends Phaser.Scene {
     this.turn--
     this.turnCountText.text = `Turns: ${this.turn}`
 
-    if (this.turn === 0) {
-      if (this.blueScore > this.redScore) {
-        this.scene.start('BlueVictory')
-      } else if (this.blueScore < this.redScore) {
-        this.scene.start('RedVictory')
-      } else {
-        this.scene.start('Tie')
-      }
+    if (this.turn === 7) {
       this.activeTurnColor = null
+      let winnerIndex = this.blueScore > this.redScore ? 1 : 0
+      if (this.blueScore === this.redScore) {
+        winnerIndex = -1
+      }
+      this.scene.start('GameOver', { winnerIndex })
     }
 
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE

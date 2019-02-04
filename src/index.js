@@ -3,10 +3,8 @@ import GameScalePlugin from 'phaser-plugin-game-scale'
 import BootScene from './scenes/Boot'
 import MenuScene from './scenes/Menu'
 import GameScene from './scenes/Game'
-import BlueVictoryScene from './scenes/BlueVictory'
+import GameOverScene from './scenes/GameOver'
 import CreditsScene from './scenes/Credits'
-import RedVictoryScene from './scenes/RedVictory'
-import TieScene from './scenes/Tie'
 
 const width = document.documentElement.clientWidth
 const height = document.documentElement.clientHeight
@@ -17,15 +15,7 @@ const game = new Phaser.Game({
   parent: 'phaser-example',
   width,
   height,
-  scene: [
-    BootScene,
-    MenuScene,
-    GameScene,
-    BlueVictoryScene,
-    RedVictoryScene,
-    TieScene,
-    CreditsScene,
-  ],
+  scene: [BootScene, MenuScene, GameScene, GameOverScene, CreditsScene],
   scale: {
     width,
     height,
