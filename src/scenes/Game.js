@@ -1,13 +1,8 @@
 import HexService from '../services/HexService'
-import LinkService from '../services/LinkService'
 import InterfaceService from '../services/InterfaceService'
 import MutatorService from '../services/MutatorService'
 import { RED, BLUE } from '../constants'
-
-const STARTING_COORDS = [
-  [{ x: 3, y: 0, color: RED }, { x: 5, y: 0, color: RED }],
-  [{ x: 3, y: 8, color: BLUE }, { x: 5, y: 8, color: BLUE }],
-]
+import PlayerService from '../services/PlayerService'
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -27,17 +22,7 @@ export default class extends Phaser.Scene {
     this.hexService = new HexService(this)
     this.game.setScaleFactor()
     this.hexService.init()
-
-    this.pairs = STARTING_COORDS.map(coordPair =>
-      coordPair.map((coord, index) => {
-        const hex = this.hexService.hexGrid.get(coord)
-        hex.index = index
-        hex.color = coord.color
-        return hex
-      }),
-    )
-
-    this.linkService = new LinkService(this, this.pairs)
+    this.playerService = new PlayerService(this)
 
     this.events.on('resize', this.resize.bind(this))
     this.input.on('pointermove', this.onMoveMouse.bind(this))
@@ -52,23 +37,23 @@ export default class extends Phaser.Scene {
 
   nextTurn() {
     this.sounds.move.play()
-    this.linkService.drawLinks()
+    this.playerService.drawLinks()
     this.turn--
     this.interfaceService.updateTurnText(this.turn)
 
     this.mutatorService.applyMutators({
       activeTurnColor: this.activeTurnColor,
-      linkService: this.linkService,
+      playerService: this.playerService,
       hexService: this.hexService,
       interfaceService: this.interfaceService,
       turnIndex: this.turn,
     })
 
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
-    this.linkService.links[0].emitter.setAlpha(
+    this.playerService.links[0].emitter.setAlpha(
       this.activeTurnColor === RED ? 1 : 0.25,
     )
-    this.linkService.links[1].emitter.setAlpha(
+    this.playerService.links[1].emitter.setAlpha(
       this.activeTurnColor === RED ? 0.25 : 1,
     )
 
@@ -114,6 +99,6 @@ export default class extends Phaser.Scene {
   resize() {
     this.game.setScaleFactor()
     this.hexService.resize(this.game.scaleFactor)
-    this.linkService.resize(this.game.scaleFactor)
+    this.playerService.resize(this.game.scaleFactor)
   }
 }

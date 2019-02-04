@@ -1,15 +1,29 @@
-import compact from 'lodash/compact'
+import { RED, BLUE } from '../constants'
 import Piece from '../sprites/piece'
-import { RED } from '../constants'
+import compact from 'lodash/compact'
 
-export default class LinkService {
-  constructor(scene, pairs) {
-    this.game = scene.game
-    this.scene = scene
+const STARTING_COORDS = [
+  [{ x: 3, y: 0, color: RED }, { x: 5, y: 0, color: RED }],
+  [{ x: 3, y: 8, color: BLUE }, { x: 5, y: 8, color: BLUE }],
+]
+
+export default class PlayerService {
+  constructor(scene) {
+    this.hexService = scene.hexService
+
+    this.pairs = STARTING_COORDS.map(coordPair =>
+      coordPair.map((coord, index) => {
+        const hex = this.hexService.hexGrid.get(coord)
+        hex.index = index
+        hex.color = coord.color
+        return hex
+      }),
+    )
+
     this.links = []
 
-    pairs.forEach(pair => {
-      const particles = this.scene.add.particles(
+    this.pairs.forEach(pair => {
+      const particles = scene.add.particles(
         pair[0].color === RED ? 'particle-pink' : 'particle-green',
       )
       pair = pair.map(hex => {
