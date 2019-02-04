@@ -45,7 +45,7 @@ export default class extends Phaser.Scene {
     this.turn = 10
     this.activeTurnColor = RED
     this.hexService = new HexService(this)
-    this.setScale()
+    this.game.setScaleFactor()
     this.hexService.init()
 
     this.pairs = STARTING_COORDS.map(coordPair => coordPair.map((coord, index) => {
@@ -182,7 +182,7 @@ export default class extends Phaser.Scene {
     this.turn--
     this.turnCountText.text = `Turns: ${this.turn}`
 
-    if (this.turn === 7) {
+    if (this.turn === 0) {
       this.activeTurnColor = null
       let winnerIndex = this.blueScore > this.redScore ? 1 : 0
       if (this.blueScore === this.redScore) {
@@ -299,20 +299,8 @@ export default class extends Phaser.Scene {
     return !hex.hexObject.destroyed && hex.hexObject.score !== 0
   }
 
-  setScale() {
-    const { clientHeight: height, clientWidth: width } = document.documentElement
-    if (height < width) {
-      this.game.scaleFactor = document.documentElement.clientHeight / 1200
-    } else {
-      this.game.scaleFactor = document.documentElement.clientWidth / 1200
-      if (this.game.scaleFactor < 0.4) {
-        this.game.scaleFactor = 0.4
-      }
-    }
-  }
-
   resize() {
-    this.setScale()
+    this.game.setScaleFactor()
     this.hexService.resize(this.game.scaleFactor)
     this.linkService.resize(this.game.scaleFactor)
   }

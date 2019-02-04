@@ -7,11 +7,6 @@ export default class extends Phaser.Scene {
 
   create() {
     const { clientHeight: height, clientWidth: width } = document.documentElement
-    if (height < width) {
-      this.game.scaleFactor = height / 1200
-    } else {
-      this.game.scaleFactor = width / 1200
-    }
 
     this.background = this.add.sprite(width / 2, 150, 'title')
     this.background.setScale(this.game.scaleFactor)

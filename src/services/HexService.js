@@ -123,10 +123,6 @@ export default class HexService {
     return hex
   }
 
-  getRandomUnoccupiedTile() {
-    return sample(this.hexGrid.filter(hex => !hex.piece))
-  }
-
   resize(scale) {
     this.hexGrid.forEach((hex) => {
       hex.hexObject.sprite.setScale(scale * 0.26)

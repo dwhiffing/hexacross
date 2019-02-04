@@ -6,6 +6,20 @@ export default class extends Phaser.Scene {
   }
 
   preload() {
+    function setScaleFactor() {
+      const { clientHeight: height, clientWidth: width } = document.documentElement
+      if (height < width) {
+        this.game.scaleFactor = document.documentElement.clientHeight / 1200
+      } else {
+        this.game.scaleFactor = document.documentElement.clientWidth / 1200
+        if (this.game.scaleFactor < 0.4) {
+          this.game.scaleFactor = 0.4
+        }
+      }
+    }
+    this.game.setScaleFactor = setScaleFactor.bind(this)
+    this.game.setScaleFactor()
+
     this.gameScale.setMode('resize')
     const progress = this.add.graphics()
     this.load.on('progress', (value) => {
