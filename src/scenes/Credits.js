@@ -6,7 +6,10 @@ export default class extends Phaser.Scene {
   }
 
   create() {
-    const { clientHeight: height, clientWidth: width } = document.documentElement
+    const {
+      clientHeight: height,
+      clientWidth: width,
+    } = document.documentElement
 
     const creditsImage = this.add.sprite(width / 2, height / 2, 'credits')
     creditsImage.setScale(this.game.scaleFactor)

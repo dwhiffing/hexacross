@@ -1,5 +1,4 @@
-import { ANIMATION_SPEED } from '../scenes/Game'
-import { RED } from '../scenes/Game'
+import { RED, ANIMATION_SPEED } from '../constants'
 
 export default class Piece {
   constructor(scene, hex, color) {
@@ -25,8 +24,17 @@ export default class Piece {
       onUpdate: () => {
         const { x: startX, y: startY } = this.sprite
         const { x: endX, y: endY } = this.link.sprite
-        const curve = new Phaser.Curves.Spline([startX, startY + 200, endX, endY + 200])
-        this.pair.emitter.setEmitZone({ type: 'random', source: curve, quantity: 200 })
+        const curve = new Phaser.Curves.Spline([
+          startX,
+          startY + 200,
+          endX,
+          endY + 200,
+        ])
+        this.pair.emitter.setEmitZone({
+          type: 'random',
+          source: curve,
+          quantity: 200,
+        })
       },
       onComplete: () => {
         callback()
@@ -35,8 +43,17 @@ export default class Piece {
 
         const { x: startX, y: startY } = this.sprite
         const { x: endX, y: endY } = this.link.sprite
-        const curve = new Phaser.Curves.Spline([startX, startY + 200, endX, endY + 200])
-        this.pair.emitter.setEmitZone({ type: 'random', source: curve, quantity: 200 })
+        const curve = new Phaser.Curves.Spline([
+          startX,
+          startY + 200,
+          endX,
+          endY + 200,
+        ])
+        this.pair.emitter.setEmitZone({
+          type: 'random',
+          source: curve,
+          quantity: 200,
+        })
 
         this.hex.hexObject.nullifyPiece()
         toHex.piece = this

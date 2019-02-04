@@ -1,14 +1,8 @@
-import sumBy from 'lodash/sumBy'
 import HexService from '../services/HexService'
 import LinkService from '../services/LinkService'
 import InterfaceService from '../services/InterfaceService'
 import MutatorService from '../services/MutatorService'
-
-export const RED = 0xaa3377
-export const RED_STRING = '#aa3377'
-export const BLUE = 0x339933
-export const BLUE_STRING = '#339933'
-export const ANIMATION_SPEED = 1
+import { RED, BLUE } from '../constants'
 
 const STARTING_COORDS = [
   [{ x: 3, y: 0, color: RED }, { x: 5, y: 0, color: RED }],
@@ -36,12 +30,14 @@ export default class extends Phaser.Scene {
     this.game.setScaleFactor()
     this.hexService.init()
 
-    this.pairs = STARTING_COORDS.map(coordPair => coordPair.map((coord, index) => {
-      const hex = this.hexService.hexGrid.get(coord)
-      hex.index = index
-      hex.color = coord.color
-      return hex
-    }))
+    this.pairs = STARTING_COORDS.map(coordPair =>
+      coordPair.map((coord, index) => {
+        const hex = this.hexService.hexGrid.get(coord)
+        hex.index = index
+        hex.color = coord.color
+        return hex
+      }),
+    )
 
     this.linkService = new LinkService(this, this.pairs)
 
@@ -59,33 +55,24 @@ export default class extends Phaser.Scene {
   nextTurn() {
     this.sounds.move.play()
     this.linkService.drawLinks(this.activeTurnColor)
+    this.turn--
+    this.interfaceService.updateTurnText(this.turn)
 
     this.mutatorService.applyMutators({
       activeTurnColor: this.activeTurnColor,
       linkService: this.linkService,
       hexService: this.hexService,
       interfaceService: this.interfaceService,
+      turnIndex: this.turn,
     })
-    this.turn--
-    this.interfaceService.updateTurnText(this.turn)
-
-    if (this.turn === 0) {
-      this.activeTurnColor = null
-      let winnerIndex = this.blueScore > this.redScore ? 1 : 0
-      if (this.blueScore === this.redScore) {
-        winnerIndex = -1
-      }
-      this.scene.start('GameOver', { winnerIndex })
-    }
 
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
-    if (this.activeTurnColor === RED) {
-      this.linkService.links[0].emitter.setAlpha(1)
-      this.linkService.links[1].emitter.setAlpha(0.25)
-    } else {
-      this.linkService.links[1].emitter.setAlpha(1)
-      this.linkService.links[0].emitter.setAlpha(0.25)
-    }
+    this.linkService.links[0].emitter.setAlpha(
+      this.activeTurnColor === RED ? 1 : 0.25,
+    )
+    this.linkService.links[1].emitter.setAlpha(
+      this.activeTurnColor === RED ? 0.25 : 1,
+    )
 
     if (this.activeHex) {
       this.hexService.deselectHex(this.activeHex)
@@ -107,9 +94,9 @@ export default class extends Phaser.Scene {
 
     if (this.activeHex) {
       if (
-        !clickedHex.piece
-        && !clickedHex.hexObject.destroyed
-        && this.hexService.possibleMoves.includes(clickedHex)
+        !clickedHex.piece &&
+        !clickedHex.hexObject.destroyed &&
+        this.hexService.possibleMoves.includes(clickedHex)
       ) {
         this.activeHex.piece.move(clickedHex, this.nextTurn)
         this.activeHex.piece = null
@@ -117,9 +104,9 @@ export default class extends Phaser.Scene {
       this.hexService.deselectHex(this.activeHex)
       this.activeHex = null
     } else if (
-      clickedHex.piece
-      && clickedHex.piece.color === this.activeTurnColor
-      && clickedHex.piece.sprite.alpha !== 0
+      clickedHex.piece &&
+      clickedHex.piece.color === this.activeTurnColor &&
+      clickedHex.piece.sprite.alpha !== 0
     ) {
       const hex = this.hexService.selectHex(clickedHex)
       this.activeHex = hex

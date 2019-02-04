@@ -1,12 +1,20 @@
-import { RED, ANIMATION_SPEED } from '../scenes/Game'
+import { RED, ANIMATION_SPEED } from '../constants'
 
 export default class Hex {
   constructor(y, x, position, scene, xOffset = 0, yOffset = 0) {
     this.scene = scene
-    this.sprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'hexagon')
+    this.sprite = this.scene.add.sprite(
+      position.x + xOffset,
+      position.y + yOffset,
+      'hexagon',
+    )
     this.gridX = x
     this.gridY = y
-    this.coinSprite = this.scene.add.sprite(position.x + xOffset, position.y + yOffset, 'coin')
+    this.coinSprite = this.scene.add.sprite(
+      position.x + xOffset,
+      position.y + yOffset,
+      'coin',
+    )
     this.coinSprite.alpha = 0
     this.redNodeSprite = this.scene.add.sprite(
       position.x + xOffset,

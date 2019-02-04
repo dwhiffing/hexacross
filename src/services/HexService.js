@@ -1,6 +1,5 @@
 import { defineGrid, extendHex } from 'honeycomb-grid'
 import compact from 'lodash/compact'
-import sample from 'lodash/sample'
 import Hex from '../sprites/hex'
 
 const SCORES = [
@@ -26,7 +25,10 @@ export default class HexService {
     const scene = this.scene
     const size = parseInt(60 * this.game.scaleFactor)
     this.size = size
-    const { clientHeight: height, clientWidth: width } = document.documentElement
+    const {
+      clientHeight: height,
+      clientWidth: width,
+    } = document.documentElement
     this.xOffset = (width - size * 14) / 2
     this.yOffset = (height - size * 12) / 2
     const { xOffset, yOffset } = this
@@ -47,7 +49,7 @@ export default class HexService {
       onCreate: hex => hex.render(),
     })
 
-    this.hexGrid.forEach((hex) => {
+    this.hexGrid.forEach(hex => {
       const score = SCORES[hex.y][hex.x]
       hex.hexObject.setScore(score)
     })
@@ -57,9 +59,9 @@ export default class HexService {
     const hoveredHex = this.getHexFromScreenPos(pointer)
 
     if (
-      this.lastHoveredHex
-      && !this.lastHoveredHex.active
-      && !this.possibleMoves.includes(this.lastHoveredHex)
+      this.lastHoveredHex &&
+      !this.lastHoveredHex.active &&
+      !this.possibleMoves.includes(this.lastHoveredHex)
     ) {
       this.lastHoveredHex.deselect()
     }
@@ -141,7 +143,7 @@ export default class HexService {
   }
 
   resize(scale) {
-    this.hexGrid.forEach((hex) => {
+    this.hexGrid.forEach(hex => {
       hex.hexObject.sprite.setScale(scale * 0.26)
     })
   }

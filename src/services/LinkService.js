@@ -1,6 +1,6 @@
 import compact from 'lodash/compact'
 import Piece from '../sprites/piece'
-import { RED } from '../scenes/Game'
+import { RED } from '../constants'
 
 export default class LinkService {
   constructor(scene, pairs) {
@@ -8,15 +8,14 @@ export default class LinkService {
     this.scene = scene
     this.links = []
 
-    pairs.forEach((pair) => {
+    pairs.forEach(pair => {
       const particles = this.scene.add.particles(
         pair[0].color === RED ? 'particle-pink' : 'particle-green',
       )
-      pair = pair.map((hex) => {
+      pair = pair.map(hex => {
         const piece = new Piece(scene, hex.hexObject, hex.color)
         piece.hex = hex
         hex.piece = piece
-        piece.sprite.setFrame(11)
         return piece
       })
       pair.particles = particles
@@ -28,11 +27,16 @@ export default class LinkService {
 
     this.drawLinks(this.links)
 
-    this.links.forEach((pair) => {
+    this.links.forEach(pair => {
       const { x: startX, y: startY } = pair[0].hex.hexObject.sprite
       const { x: endX, y: endY } = pair[1].hex.hexObject.sprite
 
-      const curve = new Phaser.Curves.Spline([startX, startY + 200, endX, endY + 200])
+      const curve = new Phaser.Curves.Spline([
+        startX,
+        startY + 200,
+        endX,
+        endY + 200,
+      ])
       pair.emitter = pair.particles.createEmitter({
         y: -200,
         scale: { start: 0.3, end: 0 },
@@ -82,6 +86,8 @@ export default class LinkService {
   }
 
   resize(scaleFactor) {
-    this.links.forEach(link => link.forEach(piece => piece.sprite.setScale(scaleFactor * 0.2)))
+    this.links.forEach(link =>
+      link.forEach(piece => piece.sprite.setScale(scaleFactor * 0.2)),
+    )
   }
 }

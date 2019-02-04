@@ -1,7 +1,9 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "class-methods-use-this": ["error", "never"],
+    "no-param-reassign": ["error", "never"]
   },
   "globals": { "Phaser": true }
 }

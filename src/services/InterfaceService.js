@@ -4,7 +4,10 @@ const color = '#ffffff'
 
 export default class InterfaceService {
   constructor(scene) {
-    const { clientHeight: height, clientWidth: width } = document.documentElement
+    const {
+      clientHeight: height,
+      clientWidth: width,
+    } = document.documentElement
     this.sceneRef = scene
 
     this.redScoreTextObject = this.sceneRef.add.text(30, 50, 'P1: 0', {
@@ -26,11 +29,16 @@ export default class InterfaceService {
     )
     this.blueScoreTextObject.setOrigin(1, 0)
 
-    this.turnCountText = this.sceneRef.add.text(width / 2, height - 100, 'Turns: 10', {
-      fontFamily,
-      fontSize: 32,
-      align: 'center',
-    })
+    this.turnCountText = this.sceneRef.add.text(
+      width / 2,
+      height - 100,
+      'Turns: 10',
+      {
+        fontFamily,
+        fontSize: 32,
+        align: 'center',
+      },
+    )
     this.turnCountText.setOrigin(0.5, 0)
 
     this.back = this.sceneRef.add
@@ -54,11 +62,19 @@ export default class InterfaceService {
       this.sceneRef.scene.start('Credits')
     })
 
-    const title = this.sceneRef.add.image(this.sceneRef.game.config.width / 2, 70, 'title')
+    const title = this.sceneRef.add.image(
+      this.sceneRef.game.config.width / 2,
+      70,
+      'title',
+    )
     title.setScale(this.sceneRef.game.scaleFactor * 0.5)
 
     this.disableSoundButton = this.sceneRef.add
-      .image(this.sceneRef.game.config.width - 50, this.sceneRef.game.config.height - 70, 'sound')
+      .image(
+        this.sceneRef.game.config.width - 50,
+        this.sceneRef.game.config.height - 70,
+        'sound',
+      )
       .setInteractive()
     this.disableSoundButton.on('pointerup', this.disableSound.bind(this))
     this.disableSoundButton.setScale(0.065)

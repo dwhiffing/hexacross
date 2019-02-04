@@ -7,7 +7,10 @@ export default class extends Phaser.Scene {
 
   preload() {
     function setScaleFactor() {
-      const { clientHeight: height, clientWidth: width } = document.documentElement
+      const {
+        clientHeight: height,
+        clientWidth: width,
+      } = document.documentElement
       if (height < width) {
         this.game.scaleFactor = document.documentElement.clientHeight / 1200
       } else {
@@ -22,10 +25,15 @@ export default class extends Phaser.Scene {
 
     this.gameScale.setMode('resize')
     const progress = this.add.graphics()
-    this.load.on('progress', (value) => {
+    this.load.on('progress', value => {
       progress.clear()
       progress.fillStyle(0xffffff, 1)
-      progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60)
+      progress.fillRect(
+        0,
+        this.sys.game.config.height / 2,
+        this.sys.game.config.width * value,
+        60,
+      )
     })
 
     this.load.image('credits', 'assets/images/credits.jpg')

@@ -8,12 +8,17 @@ export default class extends Phaser.Scene {
   }
 
   create() {
-    const { clientHeight: height, clientWidth: width } = document.documentElement
+    const {
+      clientHeight: height,
+      clientWidth: width,
+    } = document.documentElement
 
     const background = this.add.sprite(width / 2, 150, 'title')
     background.setScale(0.5)
 
-    const play = this.add.image(width / 2, height / 2 + height / 3, 'play').setInteractive()
+    const play = this.add
+      .image(width / 2, height / 2 + height / 3, 'play')
+      .setInteractive()
     play.setScale(this.game.scaleFactor * 0.7)
     play.on('pointerdown', () => {
       this.scene.start('Game')
