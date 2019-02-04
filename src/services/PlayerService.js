@@ -1,5 +1,5 @@
 import { RED, BLUE } from '../constants'
-import Piece from '../sprites/piece'
+import Link from '../sprites/link'
 import compact from 'lodash/compact'
 
 const STARTING_COORDS = [
@@ -9,28 +9,33 @@ const STARTING_COORDS = [
 
 export default class PlayerService {
   constructor(scene) {
+    this.scene = scene
     this.hexService = scene.hexService
+    this.resize = this.resize.bind(this)
 
-    this.pairs = STARTING_COORDS.map(coordPair =>
+    this.initLinks()
+    this.initEmitters()
+  }
+
+  initLinks() {
+    this.links = []
+
+    STARTING_COORDS.map(coordPair =>
       coordPair.map((coord, index) => {
         const hex = this.hexService.hexGrid.get(coord)
         hex.index = index
         hex.color = coord.color
         return hex
       }),
-    )
-
-    this.links = []
-
-    this.pairs.forEach(pair => {
-      const particles = scene.add.particles(
+    ).forEach(pair => {
+      const particles = this.scene.add.particles(
         pair[0].color === RED ? 'particle-pink' : 'particle-green',
       )
       pair = pair.map(hex => {
-        const piece = new Piece(scene, hex.hexObject, hex.color)
-        piece.hex = hex
-        hex.piece = piece
-        return piece
+        const link = new Link(this.scene, hex.hexObject, hex.color)
+        link.hex = hex
+        hex.link = link
+        return link
       })
       pair.particles = particles
       pair.color = pair[0].hex.color
@@ -39,9 +44,11 @@ export default class PlayerService {
       this.links.push(pair)
     })
 
-    this.drawLinks()
+    this.updateLinks()
+  }
 
-    this.links.forEach(pair => {
+  initEmitters() {
+    this.links.forEach((pair, index) => {
       const { x: startX, y: startY } = pair[0].hex.hexObject.sprite
       const { x: endX, y: endY } = pair[1].hex.hexObject.sprite
 
@@ -54,18 +61,14 @@ export default class PlayerService {
       pair.emitter = pair.particles.createEmitter({
         y: -200,
         scale: { start: 0.3, end: 0 },
-        alpha: 0.25,
+        alpha: index === 0 ? 1 : 0.25,
         blendMode: 'SCREEN',
         emitZone: { type: 'random', source: curve, quantity: 200 },
       })
     })
-
-    this.links[0].emitter.setAlpha(1)
-
-    this.resize = this.resize.bind(this)
   }
 
-  drawLink(pair) {
+  updateLink(pair) {
     pair[0].pair = pair
     pair[1].pair = pair
 
@@ -79,8 +82,8 @@ export default class PlayerService {
     pair[1].line = line
   }
 
-  drawLinks() {
-    this.links.forEach(this.drawLink.bind(this))
+  updateLinks() {
+    this.links.forEach(this.updateLink.bind(this))
   }
 
   getPairIntersections() {
@@ -99,9 +102,14 @@ export default class PlayerService {
     return { point, color: pairA.color }
   }
 
+  setTurn(color) {
+    this.links[0].emitter.setAlpha(color === RED ? 1 : 0.25)
+    this.links[1].emitter.setAlpha(color === RED ? 0.25 : 1)
+  }
+
   resize(scaleFactor) {
     this.links.forEach(link =>
-      link.forEach(piece => piece.sprite.setScale(scaleFactor * 0.2)),
+      link.forEach(link => link.sprite.setScale(scaleFactor * 0.2)),
     )
   }
 }

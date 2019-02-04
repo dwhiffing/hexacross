@@ -73,8 +73,8 @@ export default class HexService {
   }
 
   selectHex(hex) {
-    if (hex.piece) {
-      const partnerHex = hex.piece.link.hex
+    if (hex.link) {
+      const partnerHex = hex.link.link.hex
       hex.hexObject.select()
       this.possibleMoves = this.getPossibleMoves(partnerHex)
       this.possibleMoves.forEach(h => h.hexObject.hover())

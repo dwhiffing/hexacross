@@ -37,7 +37,7 @@ export default class extends Phaser.Scene {
 
   nextTurn() {
     this.sounds.move.play()
-    this.playerService.drawLinks()
+    this.playerService.updateLinks()
     this.turn--
     this.interfaceService.updateTurnText(this.turn)
 
@@ -50,12 +50,7 @@ export default class extends Phaser.Scene {
     })
 
     this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
-    this.playerService.links[0].emitter.setAlpha(
-      this.activeTurnColor === RED ? 1 : 0.25,
-    )
-    this.playerService.links[1].emitter.setAlpha(
-      this.activeTurnColor === RED ? 0.25 : 1,
-    )
+    this.playerService.setTurn(this.activeTurnColor)
 
     if (this.activeHex) {
       this.hexService.deselectHex(this.activeHex)
@@ -77,19 +72,19 @@ export default class extends Phaser.Scene {
 
     if (this.activeHex) {
       if (
-        !clickedHex.piece &&
+        !clickedHex.link &&
         !clickedHex.hexObject.destroyed &&
         this.hexService.possibleMoves.includes(clickedHex)
       ) {
-        this.activeHex.piece.move(clickedHex, this.nextTurn)
-        this.activeHex.piece = null
+        this.activeHex.link.move(clickedHex, this.nextTurn)
+        this.activeHex.link = null
       }
       this.hexService.deselectHex(this.activeHex)
       this.activeHex = null
     } else if (
-      clickedHex.piece &&
-      clickedHex.piece.color === this.activeTurnColor &&
-      clickedHex.piece.sprite.alpha !== 0
+      clickedHex.link &&
+      clickedHex.link.color === this.activeTurnColor &&
+      clickedHex.link.sprite.alpha !== 0
     ) {
       const hex = this.hexService.selectHex(clickedHex)
       this.activeHex = hex

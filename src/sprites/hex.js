@@ -180,8 +180,8 @@ export default class Hex {
     this.pinkEmitter.explode()
   }
 
-  nullifyPiece() {
-    this.piece = null
+  nullifyLink() {
+    this.link = null
   }
 
   setScore(score) {

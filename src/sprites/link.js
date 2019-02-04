@@ -1,6 +1,6 @@
 import { RED, ANIMATION_SPEED } from '../constants'
 
-export default class Piece {
+export default class Link {
   constructor(scene, hex, color) {
     this.color = color
     this.scene = scene
@@ -55,8 +55,8 @@ export default class Piece {
           quantity: 200,
         })
 
-        this.hex.hexObject.nullifyPiece()
-        toHex.piece = this
+        this.hex.hexObject.nullifyLink()
+        toHex.link = this
         toHex.color = this.hex.color
       },
     })
