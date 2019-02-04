@@ -85,8 +85,8 @@ export default class InterfaceService {
     this.blueScoreTextObject.text = `P2: ${blueScore}`
   }
 
-  updateTurnText(turn) {
-    this.turnCountText.text = `Turns: ${turn}`
+  updateTurnText(turnIndex) {
+    this.turnCountText.text = `Turns: ${turnIndex}`
   }
 
   disableSound() {

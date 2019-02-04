@@ -15,14 +15,10 @@ const SCORES = [
 ]
 
 export default class HexService {
-  constructor(scene) {
-    this.game = scene.game
-    this.scene = scene
-  }
-
-  init() {
+  constructor(sceneRef) {
+    this.game = sceneRef.game
+    this.scene = sceneRef
     this.possibleMoves = []
-    const scene = this.scene
     const size = parseInt(60 * this.game.scaleFactor)
     this.size = size
     const {
@@ -36,7 +32,14 @@ export default class HexService {
       size,
       render() {
         const position = this.toPoint()
-        const hex = new Hex(this.x, this.y, position, scene, xOffset, yOffset)
+        const hex = new Hex(
+          this.x,
+          this.y,
+          position,
+          sceneRef,
+          xOffset,
+          yOffset,
+        )
         this.hexObject = hex
       },
     })
@@ -127,6 +130,9 @@ export default class HexService {
   }
 
   deselectHex(hex) {
+    if (!hex) {
+      return
+    }
     hex.hexObject.deselect()
     this.possibleMoves.forEach(h => h.hexObject.deselect())
     this.possibleMoves = []

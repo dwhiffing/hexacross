@@ -102,9 +102,10 @@ export default class PlayerService {
     return { point, color: pairA.color }
   }
 
-  setTurn(color) {
-    this.links[0].emitter.setAlpha(color === RED ? 1 : 0.25)
-    this.links[1].emitter.setAlpha(color === RED ? 0.25 : 1)
+  setTurn(turnIndex) {
+    this.links[0].emitter.setAlpha(turnIndex % 2 === 0 ? 1 : 0.25)
+    this.links[1].emitter.setAlpha(turnIndex % 2 === 0 ? 0.25 : 1)
+    this.updateLinks()
   }
 
   resize(scaleFactor) {

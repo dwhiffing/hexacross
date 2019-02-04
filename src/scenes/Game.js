@@ -10,6 +10,8 @@ export default class extends Phaser.Scene {
   }
 
   create() {
+    this.nextTurn = this.nextTurn.bind(this)
+
     this.sounds = {}
     this.sounds.recapture = this.sound.add('recaptureNodeSound')
     this.sounds.capture = this.sound.add('captureNodeSound')
@@ -17,44 +19,32 @@ export default class extends Phaser.Scene {
     this.sounds.click = this.sound.add('clickSound')
     this.sounds.destroy = this.sound.add('destroyNodeSound')
 
-    this.turn = 10
-    this.activeTurnColor = RED
     this.hexService = new HexService(this)
-    this.game.setScaleFactor()
-    this.hexService.init()
     this.playerService = new PlayerService(this)
+    this.interfaceService = new InterfaceService(this)
+    this.mutatorService = new MutatorService(this)
+
+    this.data.set('turnIndex', 10)
+    this.data.set('hexService', this.hexService)
+    this.data.set('playerService', this.playerService)
+    this.data.set('interfaceService', this.interfaceService)
+    this.data.set('mutatorService', this.mutatorService)
 
     this.events.on('resize', this.resize.bind(this))
     this.input.on('pointermove', this.onMoveMouse.bind(this))
     this.input.on('pointerdown', this.onClickMouse.bind(this))
-
-    this.interfaceService = new InterfaceService(this)
-    this.mutatorService = new MutatorService(this)
-    this.nextTurn = this.nextTurn.bind(this)
 
     this.resize()
   }
 
   nextTurn() {
     this.sounds.move.play()
-    this.playerService.updateLinks()
-    this.turn--
-    this.interfaceService.updateTurnText(this.turn)
+    this.data.values.turnIndex--
+    this.interfaceService.updateTurnText(this.data.values.turnIndex)
 
-    this.mutatorService.applyMutators({
-      activeTurnColor: this.activeTurnColor,
-      playerService: this.playerService,
-      hexService: this.hexService,
-      interfaceService: this.interfaceService,
-      turnIndex: this.turn,
-    })
-
-    this.activeTurnColor = this.activeTurnColor === BLUE ? RED : BLUE
-    this.playerService.setTurn(this.activeTurnColor)
-
-    if (this.activeHex) {
-      this.hexService.deselectHex(this.activeHex)
-    }
+    this.mutatorService.applyMutators(this.data.values)
+    this.playerService.setTurn(this.data.turnIndex)
+    this.hexService.deselectHex(this.activeHex)
   }
 
   onMoveMouse(pointer) {
@@ -81,11 +71,7 @@ export default class extends Phaser.Scene {
       }
       this.hexService.deselectHex(this.activeHex)
       this.activeHex = null
-    } else if (
-      clickedHex.link &&
-      clickedHex.link.color === this.activeTurnColor &&
-      clickedHex.link.sprite.alpha !== 0
-    ) {
+    } else if (clickedHex.link && clickedHex.link.sprite.alpha !== 0) {
       const hex = this.hexService.selectHex(clickedHex)
       this.activeHex = hex
     }
