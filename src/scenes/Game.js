@@ -25,8 +25,6 @@ const SCORES = [
   [0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
-const TURN_DURATION = 10000
-
 export default class extends Phaser.Scene {
   constructor() {
     super({
@@ -70,20 +68,6 @@ export default class extends Phaser.Scene {
       }
     })
 
-    this.turnTimerDisabled = true
-    this.redTurnTimerBar = this.add.graphics({ fillStyle: { color: RED } })
-    this.blueTurnTimerBar = this.add.graphics({ fillStyle: { color: BLUE } })
-    const rect = new Phaser.Geom.Rectangle(
-      0,
-      this.game.config.height - 30,
-      this.game.config.width,
-      30,
-    )
-    this.redTurnTimerBar.fillRectShape(rect)
-    this.blueTurnTimerBar.fillRectShape(rect)
-    this.blueTurnTimerBar.setScale(0)
-    this.redTurnTimerBar.setScale(0)
-
     this.redScoreTextObject = this.add.text(30, 50, 'P1: 0', {
       fontFamily: 'sans-serif',
       fontSize: 24,
@@ -102,12 +86,6 @@ export default class extends Phaser.Scene {
     this.blueScore = 0
     this.blueHexes = []
     this.redHexes = []
-
-    // const disableTurnTimerButton = this.add
-    //   .image(this.game.config.width - 70, this.game.config.height - 70, 'fullscreen')
-    //   .setInteractive()
-    // disableTurnTimerButton.on('pointerup', this.disableTurnTimer.bind(this))
-    // disableTurnTimerButton.setScale(0.25)
 
     this.turnCountText = this.add.text(
       document.documentElement.clientWidth / 2,
@@ -152,29 +130,10 @@ export default class extends Phaser.Scene {
     this.disableSoundButton.setScale(0.065)
 
     this.resize()
-
-    const func = this.turnTimerDisabled ? () => {} : this.nextTurn
-    this.turnTimer = this.time.delayedCall(TURN_DURATION, func, [], this)
-  }
-
-  update() {
-    if (this.turnTimerDisabled) {
-      return
-    }
-    if (this.activeTurnColor === BLUE) {
-      this.blueTurnTimerBar.setScale(1 - this.turnTimer.getProgress(), 1)
-      this.redTurnTimerBar.setScale(0)
-    } else {
-      this.blueTurnTimerBar.setScale(0)
-      this.redTurnTimerBar.setScale(1 - this.turnTimer.getProgress(), 1)
-    }
   }
 
   nextTurn() {
     this.playSound('move')
-    if (!this.turnTimerDisabled) {
-      this.turnTimer = this.time.delayedCall(TURN_DURATION, this.nextTurn, [], this)
-    }
     this.linkService.drawLinks(this.activeTurnColor)
 
     this.destroyIntersection()
@@ -241,9 +200,6 @@ export default class extends Phaser.Scene {
 
   movePieceToHex(piece, toHex) {
     piece.move(toHex, this.nextTurn.bind(this))
-    this.blueTurnTimerBar.setScale(0)
-    this.redTurnTimerBar.setScale(0)
-    this.turnTimer.destroy()
   }
 
   destroyIntersection() {
@@ -307,15 +263,6 @@ export default class extends Phaser.Scene {
 
   restart() {
     this.scene.restart()
-  }
-
-  disableTurnTimer() {
-    this.turnTimerDisabled = !this.turnTimerDisabled
-    if (this.turnTimerDisabled) {
-      this.blueTurnTimerBar.setScale(0)
-      this.redTurnTimerBar.setScale(0)
-      this.turnTimer.destroy()
-    }
   }
 
   disableSound() {
