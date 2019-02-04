@@ -3,7 +3,7 @@ import ScoreMutator from './types/ScoreMutator'
 import { RED, BLUE } from '../constants'
 
 export default class StaticScoreMutator extends ScoreMutator {
-  apply({ activeTurnColor, hexService, linkService, interfaceService }) {
+  apply({ activeTurnColor, hexService, linkService }) {
     const link =
       activeTurnColor === RED ? linkService.links[0] : linkService.links[1]
     const hexes = hexService.hexGrid

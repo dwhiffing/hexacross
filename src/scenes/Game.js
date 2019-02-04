@@ -11,9 +11,7 @@ const STARTING_COORDS = [
 
 export default class extends Phaser.Scene {
   constructor() {
-    super({
-      key: 'Game',
-    })
+    super({ key: 'Game' })
   }
 
   create() {
@@ -54,7 +52,7 @@ export default class extends Phaser.Scene {
 
   nextTurn() {
     this.sounds.move.play()
-    this.linkService.drawLinks(this.activeTurnColor)
+    this.linkService.drawLinks()
     this.turn--
     this.interfaceService.updateTurnText(this.turn)
 

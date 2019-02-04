@@ -25,7 +25,7 @@ export default class LinkService {
       this.links.push(pair)
     })
 
-    this.drawLinks(this.links)
+    this.drawLinks()
 
     this.links.forEach(pair => {
       const { x: startX, y: startY } = pair[0].hex.hexObject.sprite
