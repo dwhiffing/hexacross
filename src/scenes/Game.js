@@ -1,5 +1,7 @@
+import sumBy from 'lodash/sumBy'
 import HexService from '../services/HexService'
 import LinkService from '../services/LinkService'
+import InterfaceService from '../services/InterfaceService'
 
 export const RED = 0xaa3377
 export const RED_STRING = '#aa3377'
@@ -46,66 +48,12 @@ export default class extends Phaser.Scene {
     this.input.on('pointermove', this.onMoveMouse.bind(this))
     this.input.on('pointerdown', this.onClickMouse.bind(this))
 
-    this.redScoreTextObject = this.add.text(30, 50, 'P1: 0', {
-      fontFamily: 'sans-serif',
-      fontSize: 24,
-      color: '#ffffff',
-      align: 'left',
-    })
-
-    this.blueScoreTextObject = this.add.text(this.game.config.width - 30, 50, 'P2: 0', {
-      fontFamily: 'sans-serif',
-      fontSize: 24,
-      color: '#ffffff',
-      align: 'right',
-    })
-    this.blueScoreTextObject.setOrigin(1, 0)
     this.redScore = 0
     this.blueScore = 0
     this.blueHexes = []
     this.redHexes = []
-
-    this.turnCountText = this.add.text(
-      document.documentElement.clientWidth / 2,
-      document.documentElement.clientHeight - 100,
-      'Turns: 10',
-      {
-        fontFamily: 'sans-serif',
-        fontSize: 32,
-        align: 'center',
-      },
-    )
-    this.turnCountText.setOrigin(0.5, 0)
-
-    this.back = this.add
-      .text(20, document.documentElement.clientHeight - 120, 'Exit', {
-        fontFamily: 'sans-serif',
-        fontSize: 24,
-      })
-      .setInteractive()
-    this.credits = this.add
-      .text(20, document.documentElement.clientHeight - 70, 'Credits', {
-        fontFamily: 'sans-serif',
-        fontSize: 24,
-      })
-      .setInteractive()
-
-    this.back.on('pointerdown', () => {
-      this.scene.start('Menu')
-    })
-
-    this.credits.on('pointerdown', () => {
-      this.scene.start('Credits')
-    })
-
-    const title = this.add.image(this.game.config.width / 2, 70, 'title')
-    title.setScale(this.game.scaleFactor * 0.5)
-
-    this.disableSoundButton = this.add
-      .image(this.game.config.width - 50, this.game.config.height - 70, 'sound')
-      .setInteractive()
-    this.disableSoundButton.on('pointerup', this.disableSound.bind(this))
-    this.disableSoundButton.setScale(0.065)
+    this.interfaceService = new InterfaceService(this)
+    this.nextTurn = this.nextTurn.bind(this)
 
     this.resize()
   }
@@ -117,7 +65,7 @@ export default class extends Phaser.Scene {
     this.destroyIntersection()
     this.captureNodes()
     this.turn--
-    this.turnCountText.text = `Turns: ${this.turn}`
+    this.interfaceService.updateTurnText(this.turn)
 
     if (this.turn === 0) {
       this.activeTurnColor = null
@@ -161,7 +109,7 @@ export default class extends Phaser.Scene {
         && !clickedHex.hexObject.destroyed
         && this.hexService.possibleMoves.includes(clickedHex)
       ) {
-        this.movePieceToHex(this.activeHex.piece, clickedHex)
+        this.activeHex.piece.move(clickedHex, this.nextTurn)
         this.activeHex.piece = null
       }
       this.hexService.deselectHex(this.activeHex)
@@ -174,10 +122,6 @@ export default class extends Phaser.Scene {
       const hex = this.hexService.selectHex(clickedHex)
       this.activeHex = hex
     }
-  }
-
-  movePieceToHex(piece, toHex) {
-    piece.move(toHex, this.nextTurn.bind(this))
   }
 
   destroyIntersection() {
@@ -217,16 +161,10 @@ export default class extends Phaser.Scene {
         this.blueHexes.push(hex)
       }
     })
-    this.redScore = this.redHexes.filter(this.hexesWithScore).length * 10
-    this.redScore
-      += this.redHexes.filter(this.hexesWithScore).filter(hex => hex.hexObject.score === 2).length * 10
-    this.redScoreTextObject.text = `P1: ${this.redScore}`
+    this.redScore = sumBy(this.redHexes, hex => hex.hexObject.score) * 10
+    this.blueScore = sumBy(this.blueHexes, hex => hex.hexObject.score) * 10
 
-    this.blueScore = this.blueHexes.filter(this.hexesWithScore).length * 10
-    this.blueScore
-      += this.blueHexes.filter(this.hexesWithScore).filter(hex => hex.hexObject.score === 2).length
-      * 10
-    this.blueScoreTextObject.text = `P2: ${this.blueScore}`
+    this.interfaceService.updatePlayerScores(this.redScore, this.blueScore)
   }
 
   hexesWithScore(hex) {
@@ -237,13 +175,5 @@ export default class extends Phaser.Scene {
     this.game.setScaleFactor()
     this.hexService.resize(this.game.scaleFactor)
     this.linkService.resize(this.game.scaleFactor)
-  }
-
-  restart() {
-    this.scene.restart()
-  }
-
-  disableSound() {
-    this.sound.mute = !this.sound.mute
   }
 }

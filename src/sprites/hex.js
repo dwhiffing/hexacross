@@ -134,6 +134,7 @@ export default class Hex {
     this.scene.sounds.destroy.play()
     this.destroyed = true
     this.sprite.setFrame(2)
+    this.score = 0
     this.coinSprite.alpha = 0
     this.redNodeSprite.alpha = 0
     this.blueNodeSprite.alpha = 0
