@@ -1,7 +1,4 @@
-import {
-  RED,
-  ANIMATION_SPEED
-} from '../scenes/Game'
+import { RED, ANIMATION_SPEED } from '../scenes/Game'
 
 export default class Hex {
   constructor(y, x, position, scene, xOffset = 0, yOffset = 0) {
@@ -28,7 +25,8 @@ export default class Hex {
     this.textObject = this.scene.add.text(
       this.sprite.x - 20,
       this.sprite.y - 10,
-      `${this.gridX}, ${this.gridY}`, {
+      `${this.gridX}, ${this.gridY}`,
+      {
         fontFamily: 'Arial',
         fontSize: 18,
         color: '#ffffff',
@@ -88,11 +86,11 @@ export default class Hex {
       this.emitter = particles.createEmitter({
         speed: {
           min: -250,
-          max: 250
+          max: 250,
         },
         scale: {
           start: 0.3,
-          end: 0
+          end: 0,
         },
         alpha: 0.5,
         blendMode: 'SCREEN',
@@ -100,7 +98,7 @@ export default class Hex {
         quantity: 15,
         lifespan: {
           min: 600,
-          max: 900
+          max: 900,
         },
         gravityY: 0,
       })
@@ -159,11 +157,11 @@ export default class Hex {
     const emitterOptions = {
       speed: {
         min: -250,
-        max: 250
+        max: 250,
       },
       scale: {
         start: 0.3,
-        end: 0
+        end: 0,
       },
       alpha: 0.5,
       blendMode: 'SCREEN',
@@ -171,7 +169,7 @@ export default class Hex {
       quantity: 30,
       lifespan: {
         min: 600,
-        max: 900
+        max: 900,
       },
       gravityY: 0,
     }
