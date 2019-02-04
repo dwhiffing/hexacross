@@ -112,7 +112,7 @@ export default class Hex {
       delay: index * 200 * ANIMATION_SPEED,
       duration: 750 * ANIMATION_SPEED,
       onComplete: () => {
-        this.scene.playSound('capture')
+        this.scene.sounds.capture.play()
         this.emitter.setPosition(this.sprite.x, this.sprite.y)
         this.emitter.setAlpha(0.5 + 0.1 * index)
         this.emitter.setQuantity(25 + 5 * index)
@@ -125,7 +125,7 @@ export default class Hex {
   replaceNode(color, index) {
     const sprite = color === RED ? this.blueNodeSprite : this.redNodeSprite
 
-    this.scene.playSound('recapture')
+    this.scene.sounds.recapture.play()
     this.scene.tweens.add({
       targets: sprite,
       alpha: 1,
@@ -143,7 +143,7 @@ export default class Hex {
       return
     }
 
-    this.scene.playSound('destroy')
+    this.scene.sounds.destroy.play()
     this.destroyed = true
     this.sprite.setFrame(2)
     this.coinSprite.alpha = 0

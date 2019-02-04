@@ -10,7 +10,6 @@ export const ANIMATION_SPEED = 1
 const STARTING_COORDS = [
   [{ x: 3, y: 0, color: RED }, { x: 5, y: 0, color: RED }],
   [{ x: 3, y: 8, color: BLUE }, { x: 5, y: 8, color: BLUE }],
-  // [{ x: 3, y: 6, color: 0xaaaaaa }, { x: 5, y: 2, color: 0xaaaaaa }],
 ]
 
 const SCORES = [
@@ -133,7 +132,7 @@ export default class extends Phaser.Scene {
   }
 
   nextTurn() {
-    this.playSound('move')
+    this.sounds.move.play()
     this.linkService.drawLinks(this.activeTurnColor)
 
     this.destroyIntersection()
@@ -171,7 +170,7 @@ export default class extends Phaser.Scene {
   }
 
   onClickMouse(pointer) {
-    this.playSound('click')
+    this.sounds.click.play()
     const clickedHex = this.hexService.getHexFromScreenPos(pointer)
     if (!clickedHex) {
       return
@@ -266,18 +265,6 @@ export default class extends Phaser.Scene {
   }
 
   disableSound() {
-    this.muted = !this.muted
-    this.disableSoundButton.alpha = this.muted ? 0.5 : 1
-  }
-
-  playSound(key) {
-    if (this.muted) {
-      return
-    }
-
-    const sound = this.sounds[key]
-    if (sound) {
-      sound.play()
-    }
+    this.sound.mute = !this.sound.mute
   }
 }
