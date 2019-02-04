@@ -2,6 +2,7 @@ import sumBy from 'lodash/sumBy'
 import HexService from '../services/HexService'
 import LinkService from '../services/LinkService'
 import InterfaceService from '../services/InterfaceService'
+import MutatorService from '../services/MutatorService'
 
 export const RED = 0xaa3377
 export const RED_STRING = '#aa3377'
@@ -48,11 +49,8 @@ export default class extends Phaser.Scene {
     this.input.on('pointermove', this.onMoveMouse.bind(this))
     this.input.on('pointerdown', this.onClickMouse.bind(this))
 
-    this.redScore = 0
-    this.blueScore = 0
-    this.blueHexes = []
-    this.redHexes = []
     this.interfaceService = new InterfaceService(this)
+    this.mutatorService = new MutatorService(this)
     this.nextTurn = this.nextTurn.bind(this)
 
     this.resize()
@@ -62,8 +60,12 @@ export default class extends Phaser.Scene {
     this.sounds.move.play()
     this.linkService.drawLinks(this.activeTurnColor)
 
-    this.destroyIntersection()
-    this.captureNodes()
+    this.mutatorService.applyMutators({
+      activeTurnColor: this.activeTurnColor,
+      linkService: this.linkService,
+      hexService: this.hexService,
+      interfaceService: this.interfaceService,
+    })
     this.turn--
     this.interfaceService.updateTurnText(this.turn)
 
@@ -122,53 +124,6 @@ export default class extends Phaser.Scene {
       const hex = this.hexService.selectHex(clickedHex)
       this.activeHex = hex
     }
-  }
-
-  destroyIntersection() {
-    const intersections = this.linkService.getPairIntersections()
-    intersections.forEach((intersection) => {
-      const hex = this.hexService.getHexFromScreenPos(intersection.point)
-      hex.hexObject.destroy(this.activeTurnColor)
-    })
-  }
-
-  captureNodes() {
-    let hexes
-    if (this.activeTurnColor === RED) {
-      hexes = this.hexService.hexGrid.hexesBetween(
-        this.linkService.links[0][0].hex,
-        this.linkService.links[0][1].hex,
-      )
-    } else {
-      hexes = this.hexService.hexGrid.hexesBetween(
-        this.linkService.links[1][0].hex,
-        this.linkService.links[1][1].hex,
-      )
-    }
-
-    const slice = hexes.slice(1, hexes.length - 1).reverse()
-
-    slice.forEach((hex, index) => {
-      hex.hexObject.capture(this.activeTurnColor, index)
-      if (hex.captured) {
-        return
-      }
-      if (this.activeTurnColor === RED) {
-        if (this.redHexes.indexOf(hex) === -1) {
-          this.redHexes.push(hex)
-        }
-      } else if (this.blueHexes.indexOf(hex) === -1) {
-        this.blueHexes.push(hex)
-      }
-    })
-    this.redScore = sumBy(this.redHexes, hex => hex.hexObject.score) * 10
-    this.blueScore = sumBy(this.blueHexes, hex => hex.hexObject.score) * 10
-
-    this.interfaceService.updatePlayerScores(this.redScore, this.blueScore)
-  }
-
-  hexesWithScore(hex) {
-    return !hex.hexObject.destroyed && hex.hexObject.score !== 0
   }
 
   resize() {
