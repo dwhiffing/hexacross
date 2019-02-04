@@ -12,18 +12,6 @@ const STARTING_COORDS = [
   [{ x: 3, y: 8, color: BLUE }, { x: 5, y: 8, color: BLUE }],
 ]
 
-const SCORES = [
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 2, 1, 1, 2, 0, 0],
-  [0, 0, 1, 0, 0, 0, 1, 0],
-  [0, 1, 0, 1, 1, 0, 1, 0],
-  [0, 2, 0, 1, 2, 1, 0, 2],
-  [0, 1, 0, 1, 1, 0, 1, 0],
-  [0, 0, 1, 0, 0, 0, 1, 0],
-  [0, 0, 2, 1, 1, 2, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-]
-
 export default class extends Phaser.Scene {
   constructor() {
     super({
@@ -57,15 +45,6 @@ export default class extends Phaser.Scene {
     this.events.on('resize', this.resize.bind(this))
     this.input.on('pointermove', this.onMoveMouse.bind(this))
     this.input.on('pointerdown', this.onClickMouse.bind(this))
-
-    this.hexService.hexGrid.forEach((hex) => {
-      const score = SCORES[hex.y][hex.x]
-      hex.hexObject.setScore(score)
-      if (hex.score > 0) {
-        hex.hexObject.textObject.text = `${hex.score}`
-        hex.hexObject.textObject.alpha = 1
-      }
-    })
 
     this.redScoreTextObject = this.add.text(30, 50, 'P1: 0', {
       fontFamily: 'sans-serif',

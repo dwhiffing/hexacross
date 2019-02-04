@@ -22,19 +22,7 @@ export default class Hex {
     )
     this.blueNodeSprite.alpha = 0
     this.blueNodeSprite.setScale(0)
-    this.textObject = this.scene.add.text(
-      this.sprite.x - 20,
-      this.sprite.y - 10,
-      `${this.gridX}, ${this.gridY}`,
-      {
-        fontFamily: 'Arial',
-        fontSize: 18,
-        color: '#ffffff',
-        align: 'left',
-      },
-    )
     this.score = 0
-    this.textObject.alpha = 0
   }
 
   select() {
@@ -147,7 +135,6 @@ export default class Hex {
     this.destroyed = true
     this.sprite.setFrame(2)
     this.coinSprite.alpha = 0
-    this.textObject.alpha = 0
     this.redNodeSprite.alpha = 0
     this.blueNodeSprite.alpha = 0
 

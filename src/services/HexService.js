@@ -3,6 +3,18 @@ import compact from 'lodash/compact'
 import sample from 'lodash/sample'
 import Hex from '../sprites/hex'
 
+const SCORES = [
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 2, 1, 1, 2, 0, 0],
+  [0, 0, 1, 0, 0, 0, 1, 0],
+  [0, 1, 0, 1, 1, 0, 1, 0],
+  [0, 2, 0, 1, 2, 1, 0, 2],
+  [0, 1, 0, 1, 1, 0, 1, 0],
+  [0, 0, 1, 0, 0, 0, 1, 0],
+  [0, 0, 2, 1, 1, 2, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+]
+
 export default class HexService {
   constructor(scene) {
     this.game = scene.game
@@ -33,6 +45,11 @@ export default class HexService {
       radius: 4,
       center: [4, 4],
       onCreate: hex => hex.render(),
+    })
+
+    this.hexGrid.forEach((hex) => {
+      const score = SCORES[hex.y][hex.x]
+      hex.hexObject.setScore(score)
     })
   }
 
