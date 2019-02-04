@@ -1,0 +1,51 @@
+Starting Conditions
+  How big is the map? What tiles are active?
+  How many points are there? Where are the points located?
+  How many players are there? Where do the players begin?
+  What mutators are active?
+
+Game loop
+  # always wait for tweens to finish between steps
+  Wait for player to make valid move
+  apply all active mutators
+  check for win condition
+  rinse and repeat for all players
+
+Use mutations and events to create different game types, allow players to configure some mutations
+Mutator Types
+  Events
+    DestroyRandomTiles
+    ApplyPointsToRandomTiles
+    ShufflePlayerPositions
+  Rules
+    DestroyIntersections
+  Scoring
+    StaticCapture
+    DynamicCapture
+  WinCondition
+    ScoreTotal
+    TeritoryPercentage
+    TurnLimit
+
+Example game types:
+
+Prototype Game Rules:
+  Events: none
+  Players: 2
+  Rules: DestroyIntersections
+  Scoring: DynamicCapture
+  WinCondition: TurnLimit
+
+Survival:
+  Events: DestroyRandomTiles, ApplyPointsToRandomTiles
+  Players: 1
+  Rules: none
+  Scoring: StaticCapture
+  WinCondition: none
+
+Campaign:
+  Events: *varies
+  Players: 1
+  Rules: *varies
+  Scoring: *varies
+  WinCondition: *varies

@@ -1,0 +1,9 @@
+make use of data manager for all global state
+remove references to game wherever possible
+Make use of alignment helpers
+make use of events to make sprites more useful
+make use of events to update ui
+Replace services with something more phaser 3 like?
+Make use of cameras to allow for bigger levels and network play
+Add level editor
+Come up with system for interface
