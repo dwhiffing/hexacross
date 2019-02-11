@@ -24,7 +24,7 @@ export default class extends Phaser.Scene {
     this.interfaceService = new InterfaceService(this)
     this.mutatorService = new MutatorService(this)
 
-    this.data.set('turnIndex', 10)
+    this.data.set('turnIndex', 11)
     this.data.set('hexService', this.hexService)
     this.data.set('playerService', this.playerService)
     this.data.set('interfaceService', this.interfaceService)
@@ -44,7 +44,7 @@ export default class extends Phaser.Scene {
 
     this.mutatorService.applyMutators(this.data.values)
     this.playerService.setTurn(this.data.turnIndex)
-    this.hexService.deselectHex(this.activeHex)
+    this.hexService.deselectHex()
   }
 
   onMoveMouse(pointer) {
@@ -54,27 +54,7 @@ export default class extends Phaser.Scene {
   }
 
   onClickMouse(pointer) {
-    this.sounds.click.play()
-    const clickedHex = this.hexService.getHexFromScreenPos(pointer)
-    if (!clickedHex) {
-      return
-    }
-
-    if (this.activeHex) {
-      if (
-        !clickedHex.link &&
-        !clickedHex.hexObject.destroyed &&
-        this.hexService.possibleMoves.includes(clickedHex)
-      ) {
-        this.activeHex.link.move(clickedHex, this.nextTurn)
-        this.activeHex.link = null
-      }
-      this.hexService.deselectHex(this.activeHex)
-      this.activeHex = null
-    } else if (clickedHex.link && clickedHex.link.sprite.alpha !== 0) {
-      const hex = this.hexService.selectHex(clickedHex)
-      this.activeHex = hex
-    }
+    this.hexService.onClick(pointer)
   }
 
   resize() {

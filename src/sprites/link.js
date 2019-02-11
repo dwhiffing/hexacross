@@ -14,6 +14,7 @@ export default class Link {
   }
 
   move(toHex, callback) {
+    this.hex.link = null
     this.hex = toHex
     this.scene.tweens.add({
       targets: this.sprite,

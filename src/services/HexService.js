@@ -16,10 +16,9 @@ const SCORES = [
 
 export default class HexService {
   constructor(sceneRef) {
-    this.game = sceneRef.game
     this.scene = sceneRef
     this.possibleMoves = []
-    const size = parseInt(60 * this.game.scaleFactor)
+    const size = parseInt(60 * sceneRef.game.scaleFactor)
     this.size = size
     const {
       clientHeight: height,
@@ -85,6 +84,30 @@ export default class HexService {
     }
   }
 
+  onClick(pointer) {
+    this.scene.sounds.click.play()
+    const clickedHex = this.getHexFromScreenPos(pointer)
+
+    if (!clickedHex) {
+      return
+    }
+
+    const activeColor = this.data.values.turnIndex % 2 === 1 ? RED : BLUE
+
+    if (this.activeHex) {
+      if (
+        !clickedHex.link &&
+        !clickedHex.hexObject.destroyed &&
+        this.hexService.possibleMoves.includes(clickedHex)
+      ) {
+        this.activeHex.link.move(clickedHex, this.nextTurn)
+      }
+      this.activeHex = this.deselectHex(this.activeHex)
+    } else if (clickedHex.link && clickedHex.link.color === activeColor) {
+      this.activeHex = this.selectHex(clickedHex)
+    }
+  }
+
   getPossibleMoves(hex) {
     const neighbours = []
 
@@ -129,7 +152,7 @@ export default class HexService {
     return compact(neighbours)
   }
 
-  deselectHex(hex) {
+  deselectHex(hex = this.activeHex) {
     if (!hex) {
       return
     }
